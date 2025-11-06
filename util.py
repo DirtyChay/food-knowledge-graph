@@ -38,13 +38,17 @@ SQL = text("""
            """)
 
 
-def get_food_kg(engine, batch_size=500):
+def get_food_kg(engine, batch_size=500, process_chunk=lambda df: print("No Processing Function Provided")):
     last_id = get_last_id()
     with engine.connect().execution_options(stream_results=True) as conn:
-        while True:
-            df = pd.read_sql_query(SQL, conn, params={"last_id": last_id, "lim": batch_size})
-            if df.empty:
-                break
-            # process_chunk(df)
-            last_id = int(df["id"].iloc[-1])
-            set_last_id(last_id)
+        try:
+            while True:
+                df = pd.read_sql_query(SQL, conn, params={"last_id": last_id, "lim": batch_size})
+                if df.empty:
+                    break
+                process_chunk(df)  # may raise
+                last_id = int(df["id"].iloc[-1])
+                set_last_id(last_id)
+        except Exception as e:
+            print(f"Error after id {last_id}: {e}")
+            raise  # or log and continue

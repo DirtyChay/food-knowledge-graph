@@ -6,13 +6,8 @@ import numpy as np
 import pandas as pd
 from sqlalchemy import text
 
-CKPT = Path("checkpoints/.foodkg_checkpoint.json")
 
-OUT_DIR = Path("outputs/ingredients_dataset")  # directory of many part files
-OUT_DIR.mkdir(parents=True, exist_ok=True)
-
-
-def get_last_id():
+def get_last_id(CKPT):
     if CKPT.exists():
         with CKPT.open() as f:
             try:
@@ -22,7 +17,7 @@ def get_last_id():
     return None
 
 
-def set_last_id(v):
+def set_last_id(v, CKPT):
     # ensure directory exists
     CKPT.parent.mkdir(parents=True, exist_ok=True)
 
@@ -35,7 +30,12 @@ def set_last_id(v):
 
 
 def process_food_kg_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, restart=False):
-    last_id = get_last_id()  # your function
+    # Setup
+    CKPT = Path("checkpoints/.foodkg_checkpoint.json")
+    OUT_DIR = Path("outputs/ingredients_dataset")  # directory of many part files
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    # Pick up where left off
+    last_id = get_last_id(CKPT)  # your function
     if last_id is None or restart:
         last_id = -1
     id_column = "id"  # stable and increasing identifier
@@ -68,16 +68,73 @@ def process_food_kg_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, r
         tmp.replace(part_file)
 
         # Advance checkpoint atomically
-        set_last_id(int(batch[id_column].max()))
+        set_last_id(int(batch[id_column].max()), CKPT)
 
         # Optional: log progress
-        print(f"Wrote {part_file.name} ({start}:{stop}) — checkpoint={get_last_id()}")
+        print(f"Wrote {part_file.name} ({start}:{stop}) — checkpoint={get_last_id(CKPT)}")
+
+    print("Done.")
+
+
+def process_branded_food_product_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, restart=False):
+    # Setup
+    CKPT = Path("checkpoints/.product_checkpoint.json")
+    OUT_DIR = Path("outputs/product_dataset")  # directory of many part files
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    # Pick up where left off
+    last_id = get_last_id(CKPT)  # your function
+    if last_id is None or restart:
+        last_id = -1
+    id_column = "fdc_id"  # stable and increasing identifier
+    # Work only on remaining rows, sorted by id for deterministic batches
+    todo = df[df[id_column] > last_id].sort_values(id_column)
+    if todo.empty:
+        print("Nothing to do. All caught up.")
+        return
+
+    # Split into size-limited batches
+    n = len(todo)
+    # num_batches = int(np.ceil(n / batch_size))
+    num_batches = 3  # todo
+
+    for i in range(num_batches):
+        start = i * batch_size
+        stop = min((i + 1) * batch_size, n)
+        batch = todo.iloc[start:stop].copy()
+
+        # Apply extractor on just this batch
+        batch["ingredients_normalized"] = batch["ingredients"].apply(
+            extract_ingredients,
+            model=model,
+            client=client,
+        )
+
+        # Write to CSV safely
+        part_file = OUT_DIR / f"part_{int(batch[id_column].min())}_{int(batch[id_column].max())}.csv"
+        tmp = part_file.with_suffix(part_file.suffix + ".tmp")
+        batch[[id_column, "ingredients", "ingredients_normalized"]].to_csv(tmp, index=False)
+        tmp.replace(part_file)
+
+        # Advance checkpoint atomically
+        set_last_id(int(batch[id_column].max()), CKPT)
+
+        # Optional: log progress
+        print(f"Wrote {part_file.name} ({start}:{stop}) — checkpoint={get_last_id(CKPT)}")
 
     print("Done.")
 
 
 def assemble_food_kg_df():
     # Later, to assemble everything:
+    OUT_DIR = Path("outputs/ingredients_dataset")  # directory of many part files
+    dfs = [pd.read_csv(p) for p in sorted(OUT_DIR.glob("part_*.csv"))]
+    final_df = pd.concat(dfs, ignore_index=True)
+    return final_df
+
+
+def assemble_branded_food_product_df():
+    # Later, to assemble everything:
+    OUT_DIR = Path("outputs/product_dataset")  # directory of many part files
     dfs = [pd.read_csv(p) for p in sorted(OUT_DIR.glob("part_*.csv"))]
     final_df = pd.concat(dfs, ignore_index=True)
     return final_df
@@ -161,24 +218,24 @@ Input: {text}"""
     return []
 
 
-def get_food_kg_from_engine(engine, batch_size=500, process_chunk=lambda df: print("No Processing Function Provided")):
-    SQL = text("""
-               SELECT *
-               FROM "FoodKG"
-               WHERE (:last_id IS NULL OR id > :last_id)
-               ORDER BY id LIMIT :lim
-               """)
-
-    last_id = get_last_id()
-    with engine.connect().execution_options(stream_results=True) as conn:
-        try:
-            while True:
-                df = pd.read_sql_query(SQL, conn, params={"last_id": last_id, "lim": batch_size})
-                if df.empty:
-                    break
-                process_chunk(df)  # may raise
-                last_id = int(df["id"].iloc[-1])
-                set_last_id(last_id)
-        except Exception as e:
-            print(f"Error after id {last_id}: {e}")
-            raise  # or log and continue
+# def get_food_kg_from_engine(engine, batch_size=500, process_chunk=lambda df: print("No Processing Function Provided")):
+#     SQL = text("""
+#                SELECT *
+#                FROM "FoodKG"
+#                WHERE (:last_id IS NULL OR id > :last_id)
+#                ORDER BY id LIMIT :lim
+#                """)
+#
+#     last_id = get_last_id()
+#     with engine.connect().execution_options(stream_results=True) as conn:
+#         try:
+#             while True:
+#                 df = pd.read_sql_query(SQL, conn, params={"last_id": last_id, "lim": batch_size})
+#                 if df.empty:
+#                     break
+#                 process_chunk(df)  # may raise
+#                 last_id = int(df["id"].iloc[-1])
+#                 set_last_id(last_id)
+#         except Exception as e:
+#             print(f"Error after id {last_id}: {e}")
+#             raise  # or log and continue

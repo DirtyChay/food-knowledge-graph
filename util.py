@@ -216,47 +216,7 @@ def map_to_ingredient(
             .splitlines()[0]
             .strip()
         )
-
-    # Return plain string (never NaN)
     return parsed if parsed else ""
-
-    # try to parse; try to repair with one retry if not valid JSON
-    try:
-        parsed = json.loads(content)
-    except json.JSONDecodeError:
-        repair_msg = f"""Your previous response was not valid JSON.
-
-        Return ONLY one lowercase ingredient label as a valid JSON string.
-        If none of the allowed labels clearly fit, CREATE a concise, realistic new one.
-        No arrays, no explanations, no code fences.
-
-        Input product: {text}"""
-        response2 = client.chat.completions.create(
-            model=model,
-            messages=[
-                {"role": "system", "content": SYSTEM_MSG_INGREDIENTS},
-                {"role": "user", "content": repair_msg},
-            ],
-            max_tokens=max_tokens,
-            temperature=0,
-        )
-        content = response2.choices[0].message.content
-        try:
-            parsed = json.loads(content)
-        except json.JSONDecodeError:
-            return ""  # give up gracefully if still invalid
-
-    # Normalize shape
-    if isinstance(parsed, list):
-        return _deduplicate_preserve_order([str(x) for x in parsed])
-    # # Flatten if model returned an object (shouldn’t for single row)
-    if isinstance(parsed, dict):
-        flat = []
-        for v in parsed.values():
-            if isinstance(v, list):
-                flat.extend([str(x) for x in v])
-        return _deduplicate_preserve_order(flat)
-    return ""
 
 
 def extract_ingredients(

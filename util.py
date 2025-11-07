@@ -75,10 +75,10 @@ def process_food_kg_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, r
     print("Done.")
 
 
-def process_branded_food_product_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, restart=False):
+def process_branded_food_experimental_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, restart=False):
     # Setup
-    CKPT = Path("checkpoints/.product_checkpoint.json")
-    OUT_DIR = Path("outputs/product_dataset")  # directory of many part files
+    CKPT = Path("checkpoints/.food_branded_experimental_checkpoint.json")
+    OUT_DIR = Path("outputs/food_branded_experimental")  # directory of many part files
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     # Pick up where left off
     last_id = get_last_id(CKPT)  # your function
@@ -93,8 +93,7 @@ def process_branded_food_product_df(df, client, model="qwen/qwen3-4b-2507", batc
 
     # Split into size-limited batches
     n = len(todo)
-    # num_batches = int(np.ceil(n / batch_size))
-    num_batches = 3  # todo
+    num_batches = int(np.ceil(n / batch_size))
 
     for i in range(num_batches):
         start = i * batch_size
@@ -102,7 +101,7 @@ def process_branded_food_product_df(df, client, model="qwen/qwen3-4b-2507", batc
         batch = todo.iloc[start:stop].copy()
 
         # Apply extractor on just this batch
-        batch["ingredients_normalized"] = batch["ingredients"].apply(
+        batch["mapped_ingredient"] = batch["description"].apply(
             map_to_ingredient,
             model=model,
             client=client,
@@ -111,7 +110,7 @@ def process_branded_food_product_df(df, client, model="qwen/qwen3-4b-2507", batc
         # Write to CSV safely
         part_file = OUT_DIR / f"part_{int(batch[id_column].min())}_{int(batch[id_column].max())}.csv"
         tmp = part_file.with_suffix(part_file.suffix + ".tmp")
-        batch[[id_column, "ingredients", "ingredients_normalized"]].to_csv(tmp, index=False)
+        batch[[id_column, "description", "mapped_ingredient"]].to_csv(tmp, index=False)
         tmp.replace(part_file)
 
         # Advance checkpoint atomically
@@ -131,9 +130,9 @@ def assemble_food_kg_df():
     return final_df
 
 
-def assemble_branded_food_product_df():
+def assemble_branded_food_experimental_df():
     # Later, to assemble everything:
-    OUT_DIR = Path("outputs/product_dataset")  # directory of many part files
+    OUT_DIR = Path("outputs/food_branded_experimental")  # directory of many part files
     dfs = [pd.read_csv(p) for p in sorted(OUT_DIR.glob("part_*.csv"))]
     final_df = pd.concat(dfs, ignore_index=True)
     return final_df
@@ -168,15 +167,7 @@ def map_to_ingredient(
     if not text: return []  # guard for empty
     max_tokens = 800
     # reinforce JSON-only on the user message
-    user_msg = f"""Input product: {text}
-
-    Return ONLY one lowercase ingredient label as a JSON string (not an array).
-    - Choose the most specific allowed ingredient label.
-    - If no allowed label clearly fits, CREATE a concise, realistic new ingredient label (e.g., "gochujang", "pea protein", "jackfruit jerky").
-    - Output must be valid JSON (a single quoted string, no arrays, no extra text, no code fences).
-
-    Example: "mozzarella cheese"
-    """
+    user_msg = f"""Input product: {text}"""
 
     response = client.chat.completions.create(
         model=model,
@@ -188,6 +179,47 @@ def map_to_ingredient(
         temperature=0,
     )
     content = response.choices[0].message.content
+    # Strip whitespace, punctuation, quotes, and code fences
+    parsed = (
+        content.strip()
+        .strip('`')
+        .strip('"')
+        .strip("'")
+        .splitlines()[0]  # if it accidentally includes multiple lines
+        .strip()
+    )
+    # Basic validation: must be a non-empty string of text
+    if not parsed or parsed.lower() in {"unknown", "none"}:
+        # Try a repair prompt once
+        repair_msg = f"""Your previous response was invalid or empty.
+
+    Return ONLY one lowercase ingredient label as plain text.
+    No JSON, no quotes, no extra words.
+
+    Input product: {text}"""
+
+        response2 = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": SYSTEM_MSG_INGREDIENTS},
+                {"role": "user", "content": repair_msg},
+            ],
+            max_tokens=max_tokens,
+            temperature=0,
+        )
+        content = response2.choices[0].message.content or ""
+        parsed = (
+            content.strip()
+            .strip('`')
+            .strip('"')
+            .strip("'")
+            .splitlines()[0]
+            .strip()
+        )
+
+    # Return plain string (never NaN)
+    return parsed if parsed else ""
+
     # try to parse; try to repair with one retry if not valid JSON
     try:
         parsed = json.loads(content)

@@ -4,7 +4,6 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from sqlalchemy import text
 
 
 def get_last_id(CKPT):
@@ -104,7 +103,7 @@ def process_branded_food_product_df(df, client, model="qwen/qwen3-4b-2507", batc
 
         # Apply extractor on just this batch
         batch["ingredients_normalized"] = batch["ingredients"].apply(
-            extract_ingredients,
+            map_to_ingredient,
             model=model,
             client=client,
         )
@@ -140,9 +139,11 @@ def assemble_branded_food_product_df():
     return final_df
 
 
-# Load System Prompt
+# Load System Prompts
 with open("prompts/system_message_ingredients.txt", "r", encoding="utf-8") as f:
     SYSTEM_MSG_INGREDIENTS = f.read()
+with open("prompts/system_message_products.txt", "r", encoding="utf-8") as f:
+    SYSTEM_MSG_PRODUCTS = f.read()
 
 
 def _deduplicate_preserve_order(items):
@@ -155,6 +156,75 @@ def _deduplicate_preserve_order(items):
             seen.add(x)
             out.append(x)
     return out
+
+
+def map_to_ingredient(
+        description,
+        model="gpt-4o-mini",
+        client=None,
+):
+    if description is None or client is None: return []  # guard for NaN
+    text = str(description).strip()
+    if not text: return []  # guard for empty
+    max_tokens = 800
+    # reinforce JSON-only on the user message
+    user_msg = f"""Input product: {text}
+
+    Return ONLY one lowercase ingredient label as a JSON string (not an array).
+    - Choose the most specific allowed ingredient label.
+    - If no allowed label clearly fits, CREATE a concise, realistic new ingredient label (e.g., "gochujang", "pea protein", "jackfruit jerky").
+    - Output must be valid JSON (a single quoted string, no arrays, no extra text, no code fences).
+
+    Example: "mozzarella cheese"
+    """
+
+    response = client.chat.completions.create(
+        model=model,
+        messages=[
+            {"role": "system", "content": SYSTEM_MSG_PRODUCTS},
+            {"role": "user", "content": user_msg},
+        ],
+        max_tokens=max_tokens,
+        temperature=0,
+    )
+    content = response.choices[0].message.content
+    # try to parse; try to repair with one retry if not valid JSON
+    try:
+        parsed = json.loads(content)
+    except json.JSONDecodeError:
+        repair_msg = f"""Your previous response was not valid JSON.
+
+        Return ONLY one lowercase ingredient label as a valid JSON string.
+        If none of the allowed labels clearly fit, CREATE a concise, realistic new one.
+        No arrays, no explanations, no code fences.
+
+        Input product: {text}"""
+        response2 = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "system", "content": SYSTEM_MSG_INGREDIENTS},
+                {"role": "user", "content": repair_msg},
+            ],
+            max_tokens=max_tokens,
+            temperature=0,
+        )
+        content = response2.choices[0].message.content
+        try:
+            parsed = json.loads(content)
+        except json.JSONDecodeError:
+            return ""  # give up gracefully if still invalid
+
+    # Normalize shape
+    if isinstance(parsed, list):
+        return _deduplicate_preserve_order([str(x) for x in parsed])
+    # # Flatten if model returned an object (shouldn’t for single row)
+    if isinstance(parsed, dict):
+        flat = []
+        for v in parsed.values():
+            if isinstance(v, list):
+                flat.extend([str(x) for x in v])
+        return _deduplicate_preserve_order(flat)
+    return ""
 
 
 def extract_ingredients(
@@ -216,7 +286,6 @@ Input: {text}"""
                 flat.extend([str(x) for x in v])
         return _deduplicate_preserve_order(flat)
     return []
-
 
 # def get_food_kg_from_engine(engine, batch_size=500, process_chunk=lambda df: print("No Processing Function Provided")):
 #     SQL = text("""

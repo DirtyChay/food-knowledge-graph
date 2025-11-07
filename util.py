@@ -84,7 +84,7 @@ def assemble_food_kg_df():
 
 
 # Load System Prompt
-with open("prompts/system_message_ingredients.txt", "r") as f:
+with open("prompts/system_message_ingredients.txt", "r", encoding="utf-8") as f:
     SYSTEM_MSG_INGREDIENTS = f.read()
 
 

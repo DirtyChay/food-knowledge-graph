@@ -39,3 +39,33 @@ fdc_id,ingredients_normalized
 344641,"""['corn flour', 'sugar', 'wheat flour', 'oat flour', 'modified food starch', 'hydrogenated vegetable oil', 'oat fiber', 'salt', 'corn fiber', 'flavor', 'red 40', 'turmeric extract', 'blue 1', 'yellow 6', 'annatto extract', 'bht', 'vitamin c', 'niacinamide', 'iron', 'zinc oxide', 'vitamin b6', 'vitamin b2', 'vitamin b1', 'vitamin a', 'folic acid', 'vitamin b12', 'vitamin d']"""
 344642,"""['wheat', 'rice', 'sugar', 'corn', 'wheat bran', 'salt', 'malt', 'bht', 'ascorbic acid', 'niacinamide', 'iron', 'pyridoxine', 'riboflavin', 'thiamin', 'palmitate', 'folic acid', 'b12', 'd3']"""
 344643,"""['flour', 'corn syrup', 'high fructose corn syrup', 'sugar', 'dextrose', 'soybean oil', 'palm oil', 'wheat starch', 'apple', 'bleached wheat flour', 'salt', 'baking soda', 'sodium acid pyrophosphate', 'monocalcium phosphate', 'citric acid', 'gelatin', 'malic acid', 'color added', 'xanthan gum', 'soy lecithin', 'flavor', 'niacinamide', 'reduced iron', 'yellow 5 lake', 'vitamin a palmitate', 'vitamin b6', 'vitamin b2', 'vitamin b1']"""
+344644,NaN
+344645,NaN
+344646,NaN
+344647,NaN
+344648,NaN
+344649,NaN
+344650,"""['potato', 'olestra', 'maltodextrin', 'rice flour', 'buttermilk', 'wheat starch', 'salt', 'dextrose', 'monosodium glutamate', 'onion powder', 'sour cream', 'polyglycerol esters', 'vitamin e', 'citric acid', 'tocopherols', 'vitamin a', 'vitamin k', 'lactic acid', 'inosinate', 'guanylate', 'mono- and diglycerides', 'vitamin d', 'soy lecithin']"""
+344651,NaN
+344652,"""['oat', 'corn syrup', 'rice', 'sugar', 'malt', 'fructose', 'soybean', 'palm oil', 'chicory', 'dextrose', 'glycerin', 'flavor', 'chocolate', 'calcium', 'cocoa', 'soy lecithin', 'milk', 'vitamin a', 'bht', 'niacin', 'vitamin b6', 'vitamin b1', 'vitamin b2']"""
+344653,"""['flour', 'sugar', 'soybean', 'palm oil', 'oats', 'raisin', 'coconut', 'molasses', 'spice', 'salt', 'egg', 'baking soda', 'flavor', 'whey', 'soy lecithin']"""
+344654,NaN
+344655,NaN
+344656,"""['brown rice', 'mushroom', 'oat', 'mozzarella', 'onion', 'bulgur', 'cheese', 'spice', 'garlic', 'yeast extract', 'onion powder', 'mushroom powder', 'turmeric', 'soy lecithin']"""
+344657,"""['brown rice', 'mushroom', 'oat', 'mozzarella', 'onion', 'bulgur', 'cheese', 'spice', 'garlic', 'yeast extract', 'onion powder', 'mushroom powder', 'turmeric', 'soy lecithin']"""
+344658,"""['oat', 'honey', 'oat bran', 'rice syrup', 'apple', 'sugar', 'oat flour', 'butter', 'canola oil', 'salt', 'palm kernel oil', 'tapioca syrup', 'cinnamon', 'sunflower lecithin', 'flavors']"""
+344659,"""['flour', 'chocolate', 'soybean oil', 'palm oil', 'sugar', 'corn syrup', 'salt', 'baking soda', 'artificial flavor']"""
+344660,NaN
+344661,"""['flour', 'oil', 'cheese', 'salt', 'dextrose', 'paprika', 'yeast', 'soy lecithin']"""
+344662,"""['flour', 'rice flour', 'soybean oil', 'palm oil', 'cheese', 'whey', 'sugar', 'yeast extract', 'onion powder', 'garlic powder', 'celery seed', 'red pepper', 'salt', 'baking soda', 'maltodextrin', 'dextrose', 'monosodium glutamate', 'citric acid', 'annatto extract', 'paprika extract']"""
+344663,NaN
+344664,NaN
+344665,NaN
+344666,"""['flour', 'rice flour', 'soybean oil', 'cheese', 'wheat', 'soy lecithin', 'paprika', 'baking soda', 'sodium acid pyrophosphate', 'monocalcium phosphate', 'whey', 'buttermilk', 'monosodium glutamate', 'sugar', 'yeast extract', 'onion powder', 'garlic powder', 'celery seed', 'red pepper', 'natural flavor', 'inosinate', 'guanylate']"""
+344667,"""['flour', 'soybean oil', 'palm oil', 'cheddar cheese', 'milk', 'whey', 'maltodextrin', 'monosodium glutamate', 'yeast', 'baking soda', 'whey protein', 'butter', 'flavor', 'lactic acid', 'calcium lactate', 'citric acid', 'disodium phosphate', 'turmeric', 'annatto', 'soy lecithin']"""
+344668,"""['flour', 'soybean oil', 'palm oil', 'cheese', 'salt', 'whey', 'butter', 'baking soda', 'yeast', 'flavor', 'lactic acid', 'calcium lactate', 'disodium phosphate', 'citric acid', 'turmeric', 'annatto', 'soy lecithin']"""
+344669,"""['flour', 'soybean oil', 'palm oil', 'cheese', 'whey', 'maltodextrin', 'monosodium glutamate', 'butter', 'baking soda', 'yeast', 'flavor', 'lactic acid', 'calcium lactate', 'disodium phosphate', 'citric acid', 'turmeric', 'annatto', 'soy lecithin']"""
+344670,"""['flour', 'soybean oil', 'palm oil', 'cheese', 'salt', 'whey', 'butter', 'baking soda', 'yeast', 'flavor', 'lactic acid', 'calcium lactate', 'disodium phosphate', 'citric acid', 'turmeric', 'annatto', 'soy lecithin']"""
+344671,"""['flour', 'oil', 'cheese', 'salt', 'paprika', 'yeast', 'soy lecithin']"""
+344672,"""['flour', 'soybean oil', 'palm oil', 'cheese', 'salt', 'whey', 'butter', 'baking soda', 'yeast', 'flavor', 'lactic acid', 'calcium lactate', 'disodium phosphate', 'citric acid', 'turmeric', 'annatto', 'soy lecithin']"""
+344673,"""['flour', 'soybean oil', 'palm oil', 'cheese', 'salt', 'whey', 'butter', 'baking soda', 'yeast', 'flavor', 'lactic acid', 'calcium lactate', 'disodium phosphate', 'citric acid', 'turmeric', 'annatto', 'soy lecithin']"""

@@ -60,19 +60,42 @@ Produce **one normalized ingredient per semantic ingredient**
 
 ### **1. Peppers (critical rules)**
 
-#### Spice forms → pepper type
-- If measurement is small (tsp, pinch, dash) or clearly a seasoning:
-  “1 tsp pepper”, “1/2 tsp ground pepper”
-  → **“black pepper”**
+#### **HARD OVERRIDE: Pepper as a spice (tsp/dash/pinch)**
+If the ingredient includes a small measurement (tsp, teaspoon, dash, pinch, 1/8 tsp, 1/4 tsp, etc.)
+AND the ingredient contains the word "pepper"
+AND there is NO color/type modifier (white, red, cayenne, bell, sweet, hot),
+THEN the normalized ingredient MUST be:
 
-- Explicit spices remain distinct:
-  “white pepper” → “white pepper”
-  “red pepper” / “cayenne pepper” → “red pepper”
+**"black pepper"**
+
+Examples:
+- “1/4 tsp. pepper” → "black pepper"
+- “pepper to taste” → "black pepper"
+- “1/8 tsp. ground pepper” → "black pepper"
+
+This rule always overrides the default interpretation of “pepper.”
+
+#### Spice forms → pepper type
+- Keep the explicit type EXACTLY as stated:
+  - “white pepper” → “white pepper”
+  - “red pepper” → “red pepper”
+  - “cayenne pepper” → “cayenne pepper”
+  - “black pepper” (via HARD OVERRIDE or explicit) → “black pepper”
+
+Do NOT collapse “cayenne pepper” into “red pepper.”
+Each named pepper spice remains its own canonical ingredient.
+
 
 #### Produce peppers → vegetable
-- Whole peppers: “2 peppers”, “3 sweet peppers”, “bell peppers”, “hot pepper”
-  → **“pepper”**, **“bell pepper”**, or **“hot pepper”** depending on text
-  **Never** collapse produce peppers into black pepper.
+Normalize all produce-type peppers to their singular ingredient identity.
+
+- “2 peppers” → “pepper”
+- “3 sweet peppers” → “pepper”   (drop “sweet” as a descriptor)
+- “bell peppers” → “bell pepper” (keep “bell” as a true product type)
+- “hot pepper” → “pepper”        (drop “hot” as a descriptor)
+
+Only keep color/type words that represent *real* product identities (e.g., “bell pepper”).
+Never collapse produce peppers into black pepper.
 
 ---
 
@@ -103,15 +126,15 @@ Do **not** interchange paste/sauce/juice/puree/tomato.
 
 ---
 
-### **4. Animal proteins (your corrected rule)**
+### **4. Animal proteins (keep cuts/forms)**
 **KEEP cuts and forms as part of the normalized ingredient name:**
 
 - “ground beef”, “round steak”, “sirloin steak” → keep as-is
 - “pork shoulder”, “pork chops”, “chicken thighs”, “chicken breast” → keep as-is
-- “salmon fillet” → “salmon” (seafood cuts are usually redundant)
-- **Do not collapse to the species** unless the phrase itself is just the species.
+- “salmon fillet” → “salmon” (seafood cuts usually redundant)
+- Do not collapse to the species unless the phrase itself is just the species.
 
-**Processed meats remain distinct**
+**Processed meats remain distinct:**
 “bacon”, “sausage”, “ham”, “pepperoni”, “prosciutto”
 
 ---
@@ -128,7 +151,7 @@ If ingredient is literally “oil”:
 ### **6. Grains / cereals / dry goods**
 - “oats”, “rolled oats” → “oat”
 - “breadcrumbs”, “bread crumbs” → “breadcrumb”
-- Cereal products keep their identity:
+- Cereal products keep identity:
   “cornflakes” → “cornflake”
   “shredded wheat biscuits” → “biscuit”
 
@@ -163,4 +186,3 @@ Never expand beyond what is said.
 ## OUTPUT FORMAT
 Return **ONLY** a valid JSON array of strings.
 No explanation, no markdown, no code fences.
-

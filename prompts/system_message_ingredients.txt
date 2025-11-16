@@ -168,11 +168,14 @@ Keep full ingredient identity:
 
 ---
 
-### **8. OR / alternative ingredients**
-If phrase includes alternatives:
-- Output both options:
-  “beef stock or water” → “beef stock”, “water”
-- Deduplicate if they normalize to the same item.
+## OR / ALTERNATIVE INGREDIENT RULE (VERY IMPORTANT)
+**Treat “or” exactly like “and”: ALWAYS split, ALWAYS include ALL listed ingredients.
+There are no exclusives. Every mentioned item must produce its own normalized output.**
+
+Examples:
+- “beef stock or water” → “beef stock”, “water”
+- “butter or margarine” → “butter”, “margarine”
+- “1 pkg white cake mix or 1 Jiffy mix” → “white cake mix”, “cake mix”
 
 ---
 

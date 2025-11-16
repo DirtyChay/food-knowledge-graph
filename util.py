@@ -28,7 +28,7 @@ def set_last_id(v, CKPT):
     tmp.replace(CKPT)
 
 
-def process_food_kg_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, restart=False):
+def process_food_kg_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, restart=False, stop_at=None):
     # Setup
     CKPT = Path("checkpoints/.foodkg_checkpoint.json")
     OUT_DIR = Path("outputs/ingredients_dataset")  # directory of many part files
@@ -71,6 +71,9 @@ def process_food_kg_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, r
 
         # Optional: log progress
         print(f"Wrote {part_file.name} ({start}:{stop}) — checkpoint={get_last_id(CKPT)}")
+        # stop if written our max
+        if stop_at is not None and start >= stop_at:
+            break
 
     print("Done.")
 

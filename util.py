@@ -50,6 +50,10 @@ def process_food_kg_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, r
 
     for i in range(num_batches):
         start = i * batch_size
+        # stop if written our max
+        if stop_at is not None and start >= stop_at:
+            break
+        # keep going
         stop = min((i + 1) * batch_size, n)
         batch = todo.iloc[start:stop].copy()
 
@@ -71,9 +75,6 @@ def process_food_kg_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, r
 
         # Optional: log progress
         print(f"Wrote {part_file.name} ({start}:{stop}) — checkpoint={get_last_id(CKPT)}")
-        # stop if written our max
-        if stop_at is not None and start >= stop_at:
-            break
 
     print("Done.")
 

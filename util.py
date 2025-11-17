@@ -67,7 +67,7 @@ def process_food_kg_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, r
         # Write to CSV safely
         part_file = OUT_DIR / f"part_{int(batch[id_column].min())}_{int(batch[id_column].max())}.csv"
         tmp = part_file.with_suffix(part_file.suffix + ".tmp")
-        batch[[id_column, "ingredients", "ingredients_normalized"]].to_csv(tmp, index=False)
+        batch[[id_column, "title", "ingredients", "ingredients_normalized"]].to_csv(tmp, index=False)
         tmp.replace(part_file)
 
         # Advance checkpoint atomically

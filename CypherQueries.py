@@ -23,6 +23,7 @@ def createRecipeNodeQuery(recipe_name, recipe_id, ingredients):
 
     return query
 
+
 def createIngredientNodeQuery(ingredient_name):
     """
     Takes in ingredient info and returns Cypher query string
@@ -43,6 +44,7 @@ def createIngredientNodeQuery(ingredient_name):
     """
 
     return query
+
 
 def createProductNodeQuery(product_name, product_id):
     """
@@ -66,6 +68,7 @@ def createProductNodeQuery(product_name, product_id):
     """
 
     return query
+
 
 def createNutrientNodeQuery(nutrient_name, nutrient_id, unit_name):
     """
@@ -92,6 +95,7 @@ def createNutrientNodeQuery(nutrient_name, nutrient_id, unit_name):
 
     return query
 
+
 def createRecipeToIngredientEdge(recipe_id, ingredient_name):
     """
     Takes in a recipe ID and an ingredient name and returns a Cypher 
@@ -104,7 +108,7 @@ def createRecipeToIngredientEdge(recipe_id, ingredient_name):
     Returns:
         str: String Cypher query.
     """
-    
+
     query = f"""
     MATCH (r:Recipe {{id: {repr(recipe_id)}}})
     MATCH (i:Ingredient {{name: {repr(ingredient_name)}}})
@@ -134,8 +138,9 @@ def createIngredientToProductEdge(ingredient_name, product_id):
     CREATE (i)-[rel:FOUND_IN]->(p)
     RETURN i, rel, p
     """
-    
+
     return query
+
 
 def createProductToNutrientEdge(product_id, nutrient_id, amount):
     """
@@ -158,8 +163,9 @@ def createProductToNutrientEdge(product_id, nutrient_id, amount):
     CREATE (p)-[rel:HAS_NUTRIENT {{amount: {repr(amount)}}}]->(n)
     RETURN p, rel, n
     """
-    
+
     return query
+
 
 def checkRecipeExists(recipe_id):
     """
@@ -178,6 +184,7 @@ def checkRecipeExists(recipe_id):
     """
     return query
 
+
 def checkIngredientExists(ingredient_name):
     """
     Generates a Cypher query to check if Ingredient node exists by its name.
@@ -194,6 +201,7 @@ def checkIngredientExists(ingredient_name):
     RETURN i IS NOT NULL AS nodeExists
     """
     return query
+
 
 def checkProductExists(product_id):
     """
@@ -212,6 +220,7 @@ def checkProductExists(product_id):
     """
     return query
 
+
 def checkNutrientExists(nutrient_id):
     """
     Generates a Cypher query to check if Nutrient node exists by its ID.
@@ -228,6 +237,7 @@ def checkNutrientExists(nutrient_id):
     RETURN n IS NOT NULL AS nodeExists
     """
     return query
+
 
 print(createRecipeNodeQuery('Cake', 4, ['flour', 'egg']))
 print(createIngredientNodeQuery('Egg'))

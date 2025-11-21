@@ -9,107 +9,130 @@ Return **only** a plain lowercase string — no JSON, no arrays, no quotes, no m
 Given a product name from a grocery or restaurant context, identify the **single best ingredient label** it represents.
 
 Use the ALLOWED_INGREDIENTS list as your reference set.
-If none fit, create a short, realistic new label that describes the food.
+If none fit, create a short, realistic new label that reflects the product’s **true ingredient identity** (not a dish, not a brand).
 
 ---
 
 ## STEP-BY-STEP (do this mentally)
-1) **Normalize text:**
-   - Lowercase everything.
-   - Remove punctuation, symbols, and collapse whitespace.
-   - Remove size/quantity info (oz, lb, pack, 12-ct, 2l).
-   - Remove marketing words (organic, natural, premium, artisan, gluten-free, keto).
-   - Remove brand names.
-   - Remove cooking/preparation words (sliced, diced, shredded, smoked, spicy, mild).
 
-2) **Remove intended-use phrases:**
-   - Drop “for X”, “with X”, “on X” phrases (e.g., “for pork”, “for chicken”, “for tacos”).
-     These indicate what it’s used with, not what it is.
+### 1) Normalize text
+- Lowercase the entire string.
+- Remove punctuation, symbols, and collapse whitespace.
+- Remove size/quantity info (oz, lb, pack, 12-ct, 2l).
+- Remove marketing terms (organic, natural, premium, classic, original, deluxe, keto, gluten-free).
+- Remove brand names.
+- Remove preparation/state descriptors (sliced, chopped, shredded, smoked, spicy, mild).
+- Preserve identity-defining words (olive oil, soy sauce, apple cider vinegar, chocolate pudding mix).
 
-3) **Focus on the food itself, not packaging or form:**
-   - Ignore packaging cues like “mix”, “pack”, “jar”, “bottle”, “canned”, “frozen”.
-   - Keep the edible product concept (“spaghetti sauce”, “bacon”, “tortilla chips”).
+### 2) Remove intended-use phrases
+- Drop “for X”, “with X”, “on X”, etc.
+  These indicate usage, not the ingredient itself:
+  - “coating for pork” → evaluate only the coating
+  - “seasoning for chicken” → evaluate only the seasoning
 
-4) **Match against ALLOWED_INGREDIENTS:**
-   - Find the closest, most specific match from the list.
-   - If multiple matches are valid, choose the one that’s most specific to the product name.
+### 3) Focus on the edible item, not the packaging
+- Ignore packaging words (mix, pack, kit, jar, bottle, frozen, canned) unless part of a canonical ingredient identity (e.g., **taco seasoning**, **cake mix**, **pudding mix**, **salad dressing**).
+- Keep the product concept (“spaghetti sauce”, “bacon”, “tortilla chips”).
 
-5) **Special handling:**
-   - If the name includes “coating”, “breading”, “batter”, or “seasoning mix” for a protein, map to the coating/seasoning substance, not the protein.
-     - e.g., “coating for pork” → “bread crumbs”
-   - If it clearly describes a blend or flavored item (“taco seasoning”, “ranch dressing”), keep that phrase as-is.
+### 4) Match to ALLOWED_INGREDIENTS
+- Choose the most specific valid match.
+- When multiple matches fit, select the one that best captures the product’s **core identity**.
 
-6) **If no ALLOWED_INGREDIENT matches confidently:**
-   - Create a short, realistic ingredient phrase (e.g., “pea protein”, “gochujang”, “jackfruit jerky”).
-   - It must sound like a real food or ingredient, not a dish name or brand.
+### 5) Special handling (aligned with ingredient-normalization rules)
+- For “coating”, “breading”, “batter”, or “seasoning mix” intended for proteins, map to the coating/seasoning itself:
+  - “shake-and-bake coating for pork” → breadcrumb
+- Preserve identity-defining flavor/type distinctions:
+  - barbecue sauce, ranch seasoning, chocolate pudding mix
+- Infer identities only when overwhelmingly clear:
+  - soda → baking soda
+  - pepper (spice context) → black pepper
 
-7) **Output only one word or short phrase.**
-   - No commas, slashes, or conjunctions.
-   - No explanations, reasoning, or arrows.
+### 6) Singularization
+Normalize the ingredient label to **singular lowercase**:
+- bread crumbs / breadcrumbs → **breadcrumb**
+- eggs → **egg**
+- tomatoes → **tomato**
+- beans → **bean**
+- peppers → **pepper** (unless a named type like “bell pepper”)
+
+Keep canonical multi-word ingredient identities unchanged:
+- ground beef, pork shoulder, devils food cake mix, chocolate pudding mix
+
+### 7) If no ALLOWED_INGREDIENT fits confidently
+- Create a short, realistic ingredient name (e.g., “pea protein”, “gochujang”, “tamarind paste”).
+- It must be a real ingredient, not a dish, meal, or brand.
+
+### 8) Output must be a single ingredient label
+- No commas, slashes, conjunctions, multiple items, punctuation, or explanations.
+- Only one canonical food identity.
 
 ---
 
-## NORMALIZATION RULES
+## NORMALIZATION RULES (aligned with your ingredient-identity prompt)
 
-### General
-- ✅ Keep canonical food forms: “brown sugar”, “soy sauce”, “olive oil”, “mozzarella cheese”, “chicken broth”.
-- ✅ Keep true type distinctions: “barbecue sauce”, “apple cider vinegar”, “red wine vinegar”.
-- ❌ Remove brand, marketing, and formality words: “Kraft”, “Original Recipe”, “Family Size”, “Deluxe”, “Natural”.
-- ❌ Remove serving context: “for pork”, “for chicken”, “taco kit”, “soup mix for beef”.
+### General identity preservation
+- Keep canonical multi-word ingredients intact:
+  brown sugar, soy sauce, olive oil, mozzarella cheese, chicken broth, apple cider vinegar
+- Remove descriptors not part of ingredient identity:
+  natural, classic, premium, original, organic, fresh, frozen, dried
 
-### Animal Proteins
-- Collapse cuts/forms to species:
-  “chicken breast”, “ground chicken”, “pork loin”, “beef chuck” → **chicken**, **pork**, **beef**.
-- Keep processed meats distinct:
-  “bacon”, “ham”, “sausage”, “pepperoni”, “prosciutto” → keep as-is.
-- Seafood: normalize by species:
-  “salmon fillet” → “salmon”, “prawns” → “shrimp”.
+## 5. Animal Proteins
+Keep meat cuts: ground beef, pork shoulder, chicken breast, chicken thigh.
+Collapse seafood cuts: salmon fillet → salmon.
+Processed meats stay distinct: bacon, sausage, ham, pepperoni, prosciutto.
 
-### Blends and Mixes
-- “coating”, “breading”, “batter” → map to “bread crumbs” or “batter mix”.
-- “seasoning”, “spice mix”, “taco mix” → map to “taco seasoning”, “spice blend”.
-- “dressing”, “sauce”, “marinade” → map to the corresponding type if in the list.
+### Blends and mixes
+- “coating”, “breading”, “batter” → **breadcrumb** or **batter mix**
+- “seasoning”, “spice mix”, “taco mix” → **taco seasoning** or **spice blend**
+- Dressings, sauces, marinades → keep canonical type (barbecue sauce, ranch dressing)
 
-### Dishes vs. Ingredients
-- If the product name describes a **prepared dish** (e.g., “arroz con habichuelas colorados”), extract the **primary ingredient** (“red beans”).
-- Never return the whole dish name; focus on the main food component.
+### Products vs. dishes
+- If the product describes a **dish**, extract the **primary ingredient identity**, not the dish name:
+  - “arroz con habichuelas colorados” → **red bean**
+- Do not return dish names.
+
+### Pepper rules
+- Pepper in spice-measurement or seasoning context → **black pepper**
+- Explicit spice types stay explicit:
+  cayenne pepper, white pepper, red pepper
+- Produce peppers remain produce:
+  bell pepper, jalapeño, pepper
+
+### Tomato product logic
+- Keep explicit products:
+  tomato juice, tomato paste, tomato sauce, tomato puree
+- Collapse whole/diced/etc. → **tomato**
+
+### Oils
+- Preserve explicit oil types: olive oil, vegetable oil, canola oil, peanut oil
+- Generic → **oil**
+
+### Mint
+- Herb forms → **mint**
+- Candy forms → **chocolate mint candy**
+
+### Mixes
+- Keep explicit product identities:
+  devils food cake mix, chocolate pudding mix, taco seasoning, ranch seasoning, salad mix
 
 ---
 
 ## OUTPUT FORMAT
-- Return exactly **one plain lowercase ingredient label**.
-- No punctuation, arrows, quotes, lists, or explanations.
-- Do not include “→” or “-” or “for X”.
-- The output must be a single line of text.
+- Output exactly **one** plain lowercase ingredient label.
+- No punctuation, arrows, quotes, markdown, or explanations.
+- Do **not** wrap the answer in JSON.
 
 ---
 
 ## EXAMPLES
-
-✅ Correct mappings:
-- “Kraft Shake ’N Bake Original Recipe Coating for Pork” → bread crumbs
-- “McCormick Taco Seasoning Mix for Beef” → taco seasoning
-- “Tempura Batter Mix for Shrimp” → batter mix
-- “Barilla Spaghetti No. 5” → spaghetti
-- “La Croix Lime Sparkling Water 12pk” → water
-- “Restaurant, Latino, Arroz con habichuelas colorados (Rice and Red Beans)” → red beans
-- “Gochujang Hot Pepper Paste” → gochujang
-
-❌ Incorrect outputs:
-- “pork” (from “coating for pork”) — wrong target, not the coating
-- “arroz con habichuelas colorados → red beans” — no arrows or explanations
-- “bread crumbs, pork” — never multiple items
-- “unknown” — forbidden
-- “bread crumbs.” — no punctuation
-
----
-
-## OUTPUT REQUIREMENTS
-- Output **only** the ingredient label as plain text.
-- Absolutely no quotes, arrows, explanations, markdown, or extra tokens.
-- Do not wrap in JSON or code fences.
+- “Kraft Shake ’N Bake Original Recipe Coating for Pork” → **breadcrumb**
+- “McCormick Taco Seasoning Mix for Beef” → **taco seasoning**
+- “Tempura Batter Mix for Shrimp” → **batter mix**
+- “Barilla Spaghetti No. 5” → **spaghetti**
+- “La Croix Lime Sparkling Water 12pk” → **water**
+- “Restaurant, Latino, Arroz con habichuelas colorados” → **red bean**
+- “Gochujang Hot Pepper Paste” → **gochujang**
 
 ---
 
 ALLOWED_INGREDIENTS:
-

@@ -79,7 +79,8 @@ def process_food_kg_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, r
     print("Done.")
 
 
-def process_branded_food_experimental_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, restart=False):
+def process_branded_food_experimental_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, restart=False,
+                                         stop_at=None):
     # Setup
     CKPT = Path("checkpoints/.food_branded_experimental_checkpoint.json")
     OUT_DIR = Path("outputs/food_branded_experimental")  # directory of many part files
@@ -101,6 +102,10 @@ def process_branded_food_experimental_df(df, client, model="qwen/qwen3-4b-2507",
 
     for i in range(num_batches):
         start = i * batch_size
+        # stop if written our max
+        if stop_at is not None and start >= stop_at:
+            break
+        # keep going
         stop = min((i + 1) * batch_size, n)
         batch = todo.iloc[start:stop].copy()
 
@@ -145,8 +150,14 @@ def assemble_branded_food_experimental_df():
 # Load System Prompts
 with open("prompts/system_message_ingredients.txt", "r", encoding="utf-8") as f:
     SYSTEM_MSG_INGREDIENTS = f.read()
+
+# To be appended at the end of the prompt for products
+with open("checkpoints/unique_ingredients.txt", "r", encoding="utf-8") as f:
+    UNIQUE_INGREDIENTS = f.read()
+
 with open("prompts/system_message_products.txt", "r", encoding="utf-8") as f:
     SYSTEM_MSG_PRODUCTS = f.read()
+    SYSTEM_MSG_PRODUCTS += UNIQUE_INGREDIENTS
 
 
 def _deduplicate_preserve_order(items):
@@ -169,7 +180,7 @@ def map_to_ingredient(
     if description is None or client is None: return []  # guard for NaN
     text = str(description).strip()
     if not text: return []  # guard for empty
-    max_tokens = 800
+    # max_tokens = 800
     # reinforce JSON-only on the user message
     user_msg = f"""Input product: {text}"""
 
@@ -179,7 +190,7 @@ def map_to_ingredient(
             {"role": "system", "content": SYSTEM_MSG_PRODUCTS},
             {"role": "user", "content": user_msg},
         ],
-        max_tokens=max_tokens,
+        # max_tokens=max_tokens,
         temperature=0,
     )
     content = response.choices[0].message.content
@@ -208,7 +219,7 @@ def map_to_ingredient(
                 {"role": "system", "content": SYSTEM_MSG_INGREDIENTS},
                 {"role": "user", "content": repair_msg},
             ],
-            max_tokens=max_tokens,
+            # max_tokens=max_tokens,
             temperature=0,
         )
         content = response2.choices[0].message.content or ""
@@ -231,7 +242,7 @@ def extract_ingredients(
     if description is None or client is None: return []  # guard for NaN
     text = str(description).strip()
     if not text: return []  # guard for empty
-    max_tokens = 800
+    # max_tokens = 800
     # reinforce JSON-only on the user message
     user_msg = f"""Input: {text}
 Return ONLY a valid JSON array of lowercase ingredient names, no explanations, no code fences.
@@ -243,7 +254,7 @@ Example: ["chicken","butter"]"""
             {"role": "system", "content": SYSTEM_MSG_INGREDIENTS},
             {"role": "user", "content": user_msg},
         ],
-        max_tokens=max_tokens,
+        # max_tokens=max_tokens,
         temperature=0,
     )
     content = response.choices[0].message.content
@@ -262,7 +273,7 @@ Input: {text}"""
                 {"role": "system", "content": SYSTEM_MSG_INGREDIENTS},
                 {"role": "user", "content": repair_msg},
             ],
-            max_tokens=max_tokens,
+            # max_tokens=max_tokens,
             temperature=0,
         )
         content = response2.choices[0].message.content

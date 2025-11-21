@@ -4,5 +4,5 @@
 .idea/inspectionProfiles/profiles_settings.xml
 .idea/food-knowledge-graph.iml
 .env
-data
+data/raw
 outputs

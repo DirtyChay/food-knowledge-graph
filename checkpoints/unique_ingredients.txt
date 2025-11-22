@@ -1,6 +1,7 @@
 7-up
 accent
 achiote coloring
+active dry yeast
 alfalfa honey
 all-purpose flour
 allspice
@@ -10,7 +11,6 @@ almond extract
 almond flavoring
 alum
 american cheese
-anchovies
 anchovy
 angel food cake
 anise
@@ -21,35 +21,39 @@ apple jelly
 apple juice
 apple juice concentrate
 apple pie spice
+apple slice
 apple vinegar
-apples
 applesauce
+apricot
 apricot jello
 apricot nectar
 apricot preserve
 artichoke
 artichoke heart
 artichoke hearts
-baby food apricots
+baby food plum
 bac*os
 bacon
 bacon bit
-bacon bits
+bacon dripping
 bacon drippings
 bacon fat
 bacon grease
 bahar
 baked bean
+baked pie shell
 baking chocolate
 baking potato
 baking powder
 baking soda
+baking spray
 bamboo shoots
 banana
 banana pulp
-barbecue flavored seasoning and coating mix
+barbecue flavored seasoning
 barbecue sauce
 barbecue shake n bake
+basic sweet dough
 basil
 batter cake mix
 bay leaf
@@ -63,22 +67,22 @@ beef bouillon
 beef brisket
 beef broth
 beef consomme
+beef flavored broth mix
 beef stock
 beef vegetable soup
 beefogetti
 beer
 beet
 bell pepper
-bible
 biscuit
 biscuit mix
 bisquick
-bits o brillke
+bit
 bitters
 black cherry kool-aid
 black olive
-black olives
 black pepper
+black walnut
 black-eyed pea
 blackberry
 blackberry jam
@@ -87,6 +91,7 @@ blueberries
 blueberry
 blueberry pie filling
 blueing
+boneless chuck roast
 bouillon
 bourbon
 brandy
@@ -98,40 +103,41 @@ breast
 brisket
 broccoli
 broccoli and cheese soup
-brown beauty rice
+brown beauty spanish rice
 brown gravy mix
 brown rice
 brown sugar
 butter
 butter bean
 butter beans
+butter flavor
+butter flavored shortening
 butter or margarine
 butter pecan cake mix
 buttermilk
+buttermilk biscuit
 buttermilk biscuit mix
 butternut
 butterscotch chip
-butterscotch chips
 butterscotch morsel
-butterscotch morsels
 butterscotch pudding
 cabbage
 cake flour
-cake paraffin
+cake mix
+cake yeast
 calf liver
 canadian bacon
 candied cherry
 candied dill pickle
 candied fruit
 candy
-candy flowers
+candy flower
 canned pumpkin
 canned tart cherries
 canned tomatoes
 canola oil
 cantaloupe
 caper
-capers
 capn crunch
 caramel topping
 caraway seed
@@ -139,12 +145,13 @@ cardamom
 cardamon
 carrot
 cashew
-cashews or peanuts
+cashew or peanut
 catalina dressing
 catsup
 cauliflower
 cayenne pepper
 celery
+celery powder
 celery salt
 celery seed
 celery soup
@@ -167,17 +174,19 @@ cherry juice
 cherry pie filling
 cherry pie mix
 chex cereal
+chick pack
 chicken
 chicken bouillon
 chicken breast
 chicken broth
+chicken cutlet
 chicken gravy
+chicken meat
 chicken soup
 chicken soup mix
-chicken soup or mushroom soup
 chicken stock
 chicken stuffing
-chicken wings
+chicken wing
 chickpea
 chili
 chili beef soup
@@ -185,87 +194,81 @@ chili powder
 chili sauce
 chili seasoning
 chilies
-chinese noodles
+chinese noodle
 chinese won ton
 chipped beef
 chive
 chives
-chives or onions
 choco-bake
 chocolate
 chocolate cake mix
-chocolate candy bar
+chocolate candy
 chocolate chip
 chocolate chips
-chocolate curls
+chocolate cookie
+chocolate curl
 chocolate fudge cake mix
 chocolate fudge pudding mix
-chocolate instant pudding
-chocolate jell-o pudding
-chocolate mini morsels
+chocolate jell-o
+chocolate mini morsel
 chocolate morsel
-chocolate pieces
+chocolate piece
 chocolate pudding
-chocolate pudding and pie filling
-chocolate pudding mix
-chocolate sandwich cookies
 chocolate sundae syrup
 chocolate syrup
-chocolate wafers
-chop suey vegetables
-chopped black olives
+chocolate wafer
+chop suey vegetable
+chopped black olive
+chopped chives or minced onions
 chopped nut
 chopped nuts
-chopped olives
-chopped pecans
+chopped pecan
+chopped turkey or chicken
+chow mein noodle
 chow mein noodles
-chuck
+chuck cube
 chuck roast
+chunk white chicken
 cider vinegar
 cilantro
-cilantro or parsley
 cinnamon
 cinnamon sugar
 cinnamon-sugar
+cisco oil
 clam
 clam juice
-clove
 cloves
 coal
 coca cola
+cocktail hot dog
 cocoa
 coconut
-coconut flakes
+coconut flake
 coconut flavoring
 coconut milk
 coconut pecan icing
 coconut pudding
 coffee
 cognac
-colby cheese
-cold milk
 coloring
-condensed cream of celery soup
-condensed cream of chicken soup
+condensed chicken soup
 condensed cream of mushroom soup
 condensed milk
 confectioners sugar
 consomme
-cooked prune
-cooked rice or chow mein noodles
+cooked rice
 cookie dough
 cooking oil
-cooking spray
 cool whip
 corn
+corn and rice cereal
+corn bread
 corn bread mix
 corn chex
 corn chip
-corn flake
 corn meal
 corn muffin mix
 corn oil
-corn rice cereal
 corn starch
 corn syrup
 corn tortilla
@@ -276,7 +279,7 @@ corned beef
 corned beef hash
 cornflake
 cornflake crumb
-cornflakes
+cornflake crumbs
 cornmeal
 cornstarch
 cottage cheese
@@ -285,42 +288,42 @@ crab meat
 crabmeat
 cracker
 cracker crumb
+cracker crumbs
+crackers
 cranberry
 cranberry juice
 cranberry juice cocktail
 cranberry sauce
-crawfish tails
+crawfish tail
 cream
 cream cheese
+cream chicken soup
 cream corn
 cream of celery
 cream of celery soup
-cream of chicken
-cream of chicken mushroom
 cream of chicken soup
 cream of mushroom soup
 cream of onion soup
 cream of shrimp soup
 cream of tartar
 cream soup
-cream style corn
 cream-style corn
 creamed corn
 creamette shell
 creme de menthe
 crescent dinner roll
 crescent roll
+cricos
 crisco
-crisco oil
-crisp rye cracker
 crispix
 croquette sauce
 crouton
 crushed butter flavored cracker
 crushed cornflake
-crushed cornflakes
+crushed nut
 crushed pineapple
-crushed pineapple and juice
+crushed pineapple in juice
+crushed pineapple with juice
 crushed ritz cracker
 crushed tortilla chips
 crust mix
@@ -328,6 +331,7 @@ cube steak
 cucumber
 cumin
 currant jelly
+curry
 curry powder
 dark brown sugar
 dark molasses
@@ -341,21 +345,26 @@ dijon mustard
 dill
 dill pickle
 dill weed
+dinner roll
+dorito
 doritos
 dream whip
 dressing
 dried apricot
 dried beef
 dried chipped beef
-dried chopped onions
+dried herbs
 dried mustard
 dried parsley
+dried sage
+dried thyme
+dry macaroni
 dry milk powder
 dry mustard
 dry white wine
 dry yeast
 duncan hines butter cake mix
-duncan hines cake mix
+duncan hines butter recipe cake mix
 duncan hines strawberry supreme cake mix
 duncan hines white pudding cake mix
 eagle brand condensed milk
@@ -373,6 +382,7 @@ enchilada sauce
 english muffin
 english pea
 evaporated milk
+evaporated skim milk
 fat
 faux crabmeat
 feta cheese
@@ -381,6 +391,7 @@ field pea
 fish
 fish fillet
 fish head
+flaked coconut
 flank steak
 flavoring
 flax seed
@@ -388,36 +399,31 @@ flounder
 flour
 flour tortilla
 food coloring
+frango mint
 frankfurter
 french fried onion
 french onion soup
-fresh strawberries
 frito
-fritos
-frozen broccoli
 frozen chopped spinach
-frozen coconut
-frozen dinner roll
-frozen hash browns
+frozen green peas
 frozen mixed vegetables
-frozen pea
+frozen orange juice
 frozen pea pod
 frozen peas
 frozen peas and carrots
-frozen raspberries
-frozen rolls
-frozen strawberries
-frozen vegetables
+frozen raspberry
+frozen roll
+frozen strawberry
 frozen whipped topping
 fruit
 fruit cocktail
-fruit yogurt
 frying chicken
 garlic
 garlic cheese spread
 garlic powder
 garlic salt
 gelatin
+gelatine
 german chocolate cake mix
 gin
 ginger
@@ -426,7 +432,6 @@ ginger root
 glass
 graham cracker
 graham cracker crumb
-graham cracker crumbs
 graham cracker crust
 graham cracker pie crust
 granulated sugar
@@ -441,10 +446,11 @@ green chili salsa sauce
 green chilies
 green chilli
 green food coloring
-green lima beans
 green onion
+green pea
 green pepper
-green vegetable
+green sweet pepper
+green vegie
 grenadine
 grenadine syrup
 ground beef
@@ -452,41 +458,47 @@ ground chuck
 ground cinnamon
 ground ginger
 ground meat
-ground nuts
+ground nut
 ground pork
 ground pork sausage
+ground raisin
 ground round
 ground sirloin
 ground turkey
-guacamole dip
-gummy worms
+ground turkey or beef
+guacamole
+gummy worm
 haddock
 half and half
 ham
+ham bone
+ham bouillon
 hamburger
 hamburger meat
 hash brown
+hash brown potato
 heath bar
 heavy cream
+hen
 herb seasoned stuffing mix
 herb stuffing
-home
 hominy
 honey
 horseradish
-hot dog
 hot pepper
 hot pepper sauce
 hot picante sauce
 hot water
-husband
 ice
-ice cream or whipped cream
+ice cream
+ice water
 imitation crabmeat
 instant chocolate pudding
+instant chocolate pudding mix
 instant coffee
-instant french vanilla pudding
-instant potatoes
+instant lemon pudding
+instant potato
+instant pudding
 instant pudding mix
 instant tea
 instant tea with lemon
@@ -500,27 +512,25 @@ jalapeno
 jalapeno pepper
 jell-o
 jell-o pudding
-jell-o sugar-free vanilla or french vanilla pudding
 jello
-jerk spice
-jiffy cornbread mix
+juice
 karo syrup
 ketchup
 kidney bean
 kidney beans
 kielbasa
-kisses
 kiwi
-knorr vegetable soup mix
-knox gelatine
 kool-aid
+kraft macaroni and cheese
 kraut
 lamb
 lard
+large shell
 lasagne noodles
 lean hamburger
 leek
 leftover coffee
+leg of lamb
 lemon
 lemon chip
 lemon extract
@@ -528,6 +538,7 @@ lemon flavor
 lemon jell-o
 lemon jello
 lemon juice
+lemon lime soda
 lemon peel
 lemon peel powder
 lemon pepper
@@ -541,12 +552,14 @@ lemonade concentrate
 lemonade kool aid
 lemonade mix
 lettuce
-lifesavers
+life saver
 light brown sugar
 light corn syrup
+light karo syrup
 light soy sauce
 lima
 lima bean
+lima beans
 lime
 lime gelatin
 lime jell-o
@@ -554,52 +567,48 @@ lime jello
 lime juice
 lime sherbet
 linguine
-lipton country vegetable soup mix
 liquid smoke
-long grain rice
-love
 low-fat milk
 lukewarm water
 m&m candy
 macaroni
-macaroni and cheese dinner
+macaroni and cheese
 macaroni shell
 mandarin juice
 mandarin orange
 mandarin orange segments
-mandarin oranges
 mango
 manwich
-maraschino cherries
 maraschino cherry
 margarine
 marjoram
 marshmallow
 marshmallow cream
 marshmallow fluff
-marshmallows
 mashed potato
-mashed potatoes
 mashed tomatoes
 mayo
 mayonnaise
+mazola oil
 meal
-meat
 meat dripping
-meaty soup bones
-melted bacon fat
+meaty soup bone
 melted butter
 melted crisco
 melted margarine
-mild green chilies
 milk
 milk chocolate
 milnot
 mini marshmallow
+miniature marshmallow
+miniature marshmallows
 mint
+minute rice
 miracle whip
 miracle whip salad dressing
 mixed candied fruit
+mixed nut
+mixed vegetable
 mixed vegetables
 molasses
 monterey jack
@@ -610,11 +619,13 @@ mozzarella cheese
 mullet
 mushroom
 mushroom soup
+mushroom stem
 mushrooms
 mustard
 mustard seed
 navy bean
 nonfat dry milk
+nonstick cooking spray
 noodle
 noodle soup
 noodles
@@ -623,12 +634,10 @@ nut meat
 nutmeg
 nuts
 oat
+oat bran
 oatmeal
 oats
 oil
-oil of cinnamon
-oil of cloves
-oil of peppermint
 okra
 old bay
 oleo
@@ -646,6 +655,7 @@ onion soup mix
 orange
 orange candy
 orange extract
+orange flavor gelatin
 orange flavoring
 orange jello
 orange juice
@@ -656,12 +666,9 @@ orange-lemon icing
 oregano
 oreo
 oreo cookie
-ortega taco sauce
 oven cooking bag
 oyster
 oyster liquid
-paddle
-pam
 paprika
 paraffin
 paraffin wax
@@ -671,40 +678,42 @@ parsley
 pasta
 pastry
 pastry shell
-patience
 pea
+pea pod
 peach
 peach baby food
 peach jello
 peach juice
-peach slices
+peach slice
 peaches
 peanut
 peanut butter
+peanut butter cup
 peanut oil
 pear
-pear halves
+pear half
 pearl barley
-peas
 peas and carrots
 pecan
 pecan or walnut
 pepper
 peppercorn
 peppermint candy
+peppermint oil
 pepperoni
 persimmon
 persimmon pulp
 pet milk
-philly light cream cheese
 phyllo pastry
 picante sauce
 pickle
 pickle juice
-pickles
+pickling salt
 pickling spice
 pie crust
+pie filling
 pie shell
+pillsbury yellow cake mix
 pimento
 pimento cheese
 pimiento
@@ -714,16 +723,14 @@ pineapple concentrate
 pineapple juice
 pineapple preserve
 pineapple tidbit
-pinto bean
 pinto beans
 pistachio instant pudding mix
 pistachio pie filling
 pizza crust
 pizza quick sauce
 pizza sauce
-pizza seasonings
-playing together
-plum
+pizza seasoning
+plain rice
 plum baby food
 popcorn oil
 poppy seed
@@ -744,29 +751,28 @@ powdered coffee
 powdered milk
 powdered nondairy creamer
 powdered sugar
-prayer
-prepared mustard
+precooked rice
 pretzel stick
 pretzel twist
 pretzels
 processed american cheese
 prosciutto
 provolone cheese
+prune
 prune juice
-pudding
 pueblo green chili
 pumpkin
-pumpkin or sweetened squash
 pumpkin pie spice
+punch
 purple grape
+quick cooking long grain and wild rice
 radish
 ragu
 ragu light alfredo sauce
 ragu sauce
 raisin
-raisin or chocolate chip or butterscotch chip
 raisins
-ramen noodles
+ramen noodle
 ranch dressing
 ranch dressing mix
 ranch mix
@@ -774,85 +780,76 @@ ranch salad dressing mix
 ranch style bean
 raspberry
 raspberry jell-o
-raspberry jello
 raspberry juice concentrate
 red bean
-red beans
 red food coloring
 red kidney beans
-red leaf lettuce
 red pepper
 red pepper sauce
 red raspberry pie filling
 red vinegar
 red wine
 red wine vinegar
-reeses peanut butter cup
-refried beans
+refrigerator roll
 relish
 rhubarb
 rice
 rice chex
-rice crisp
-rice krisp
+rice kriscie
+rice kriscies
 rice krispies
+rice krisspie
 ricotta
 ricotta cheese
-rigatoni
 ritz cracker
 roasted green chili
 roasted peanut
 roll
 romaine lettuce
-romano
 romano cheese
 rosemary
 rotel
 round steak
 rum
-rum extract
 rum flavoring
 russian dressing
 rye bread
-rye bread crumbs
+rye bread crumb
+safflower oil
 saffron
 sage
 saifon
 salad dressing
 salad oil
-salad seasonings
+salad seasoning
 salad supreme
-salad supreme seasoning
 salami
 salmon
 salsa
 salsa sauce
 salt
 salt pork
-salted peanut
 saltine cracker
 sandwich bread
-sangaree punch
-sauce
 sauerkraut
 sausage
 scalded milk
 scallion
 scallops
 seashell
-season-all
 seasoned salt
+seasoning
+self rising flour
 self-rising flour
 self-rising meal
 semi-sweet chocolate
-semi-sweet chocolate chips
 sesame oil
 sesame seed
-sesame seeds
 shake n bake
 shallot
 sharp cheese
-shells
+shell
+shellfish
 sherry
 sherry wine
 shortening
@@ -861,7 +858,6 @@ shredded coconut
 shredded lettuce
 shredded mozzarella cheese
 shredded rice biscuit
-shredded sharp cheese
 shrimp
 sirloin
 skim milk
@@ -869,7 +865,8 @@ skor candy bar
 sliced mushrooms
 sliced olives
 sliced peach
-sliced potatoes
+sliced potato
+sliced water chestnut
 smoked deli beef
 smoked sausage
 smuckers caramel sauce
@@ -878,6 +875,7 @@ soda
 soda cracker
 soft butter
 soft margarine
+soft tortilla
 sour cream
 sour milk
 sourdough bread
@@ -885,12 +883,14 @@ soy sauce
 spaghetti
 spaghetti noodle
 spaghetti sauce
+spanish paprika
 spanish rice
 sparkling mineral water
 sparkling water
 spatini
+spice
 spinach
-spinach noodles
+spinach noodle
 spiral pasta
 split pea
 sprite
@@ -901,16 +901,14 @@ steak seasoning
 stew meat
 stewed tomato
 stewed tomatoes
-stove top stuffing
-strawberries
 strawberry
 strawberry glaze
 strawberry jell-o
 strawberry jello
 strawberry juice
-strawberry pie filling
 strawberry topping
 stroganoff sauce mix
+stuffed olive
 stuffing
 stuffing mix
 sugar
@@ -919,10 +917,12 @@ sugar cookie dough
 sugar substitute
 sugar-free instant vanilla pudding
 summer sausage
-sunflower seeds
+summer squash
+sunflower seed
 sweet potato
 sweet-n-sour sauce
 sweetened condensed milk
+sweetened squash
 swiss cheese
 syrup
 tabasco
@@ -931,18 +931,17 @@ taco salsa
 taco sauce
 taco seasoning
 taco seasoning mix
-tamales
+tamale
 tamari sauce
 tang
 tapioca
+taragon
 tarragon
 tater tot
-tater tots
 tea
 thigh
 thousand island dressing
 thyme
-toast
 tomato
 tomato and green chili
 tomato juice
@@ -954,52 +953,47 @@ tomatoes
 tortellini
 tortilla
 tortilla chip
-tortilla chips
 triple sec
 tuna
 tuna fish
 turkey
 turkey breast
-turkey or chicken
 turmeric
 turnip
-turnip greens
-twinky
-understanding
-unsweetened apple juice
+turnip green
+twinkie
 unsweetened chocolate
-v-8 juice
+v-8
 vanilla
-vanilla candy coating
 vanilla extract
+vanilla flavored candy coating
 vanilla ice cream
 vanilla instant pudding
 vanilla instant pudding mix
-vanilla or lemon
 vanilla pudding
 vanilla pudding mix
 vanilla wafers
-veelveeta
+vanilla yogurt
 veg-all
 veg-all vegetables
 vegana cheese
-vegatta
+vegeta
+vegeta cheese
 vegetable cooking spray
 vegetable oil
 vegetable shortening
 vegetable soup mix
 vegetable stock
-velveeta cheese
+velegee
 vermicelli
 vermicelli noodle
 vinegar
 vodka
 walnut
-walnuts
 water
 water chestnut
-water chestnuts
 watermelon rind
+wesson oil
 wheat chex
 wheat flour
 wheat germ
@@ -1008,42 +1002,35 @@ whipped topping
 whipping cream
 whipping topping
 whiskey
-white
-white bread
 white cake mix
 white corn syrup
 white fish
 white grape
-white grape juice
+white lily self rising flour
 white pepper
-white rice
+white sesame seed
 white sugar
 white syrup
 white vinegar
 white wine
 whole corn
-whole eggs
+whole egg
 whole kernel corn
 whole tomato
 whole wheat bread
 whole wheat flour
 whole-wheat flour
-wife
-wild rice
 wine
-wine or apple juice
 wine vinegar
 wonton wrapper
 worcestershire
 worcestershire sauce
-work
 yeast
 yellow bean
 yellow cake mix
-yellow hominy
 yellow pepper
 yellow squash
-yellow summer squash or zucchini
+yellow summer squash
 yogurt
 yolk
 zesty italian dressing

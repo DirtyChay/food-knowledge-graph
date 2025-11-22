@@ -36,13 +36,23 @@ Brand names (Wesson, Jiffy) and descriptors like organic, classic, deluxe, origi
 Preserve real multi-word ingredients (olive oil, beef stock, baking soda, bell pepper, tomato juice, chocolate fudge pudding mix).
 
 6. **Normalize to singular**
+Convert all plural ingredient nouns to singular **unless the plural form is the established, canonical product identity** (e.g., Cheerios, Rice Krispies, M&M’s, cornflakes).
+
+Examples:
 beans → bean
 eggs → egg
 tomatoes → tomato
-peppers → pepper (except if named specifically, e.g. “bell pepper”)
-   Keep multi-word ingredient identities unchanged:
-   “ground beef”, “round steak”, “pork shoulder”
-   (do NOT collapse meat cuts).
+peppers → pepper (except if part of a named type, e.g., “bell pepper”)
+bacon bits → bacon bit
+mixed nuts → mixed nut
+chocolate chips → chocolate chip
+
+**Do NOT singularize or alter true multi-word ingredient identities:**
+“ground beef”, “round steak”, “pork shoulder”, “olive oil”, “baking soda”
+(do NOT collapse meat cuts or canonical product identities).
+
+**Unit-like plural nouns (“bits”, “pieces”, “crumbs”, “strips”, “nuggets”, etc.) must be singularized unless they represent a known branded product.**
+
 
 7. **Remove unit nouns**
 celery rib → celery

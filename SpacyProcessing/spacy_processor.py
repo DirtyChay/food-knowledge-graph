@@ -1,23 +1,22 @@
-"""
-Simple Spacy-based ingredient processor for FoodKG data.
-Connects to PostgreSQL database and processes ingredients using NLP.
-"""
-
 import spacy
 import re
+import ast
 import pandas as pd
-from sqlalchemy import create_engine, text
+from sqlalchemy import create_engine
 
-# Database credentials (same as Neo4Jwriter.py)
+# Database credentials
 HOST = "awesome-hw.sdsc.edu"
 PORT = 5432
 DATABASE = "nourish"
 USER_PG = "akrish"
 PASSWORD_PG = "dse203#2025"
 
-# Load Spacy model
-print("Loading Spacy model...")
+# Load spaCy English model
 nlp = spacy.load("en_core_web_sm")
+
+# Configuration constants
+BATCH_SIZE = 4000
+SPACY_BATCH_SIZE = 256
 
 # Common measurement units to remove
 units = [
@@ -29,10 +28,24 @@ units = [
     'box', 'boxes', 'bag', 'bags', 'container', 'containers',
     'pinch', 'dash', 'slice', 'slices', 'clove', 'cloves', 'piece', 'pieces',
     'bunch', 'bunches', 'head', 'heads', 'stalk', 'stalks', 'strip', 'strips',
-    'small', 'medium', 'large', 'extra'
+    'small', 'medium', 'large', 'extra', 'stick', 'sticks', 'whole', 'env', 'envelope'
 ]
 pattern_units = r'\b(?:' + '|'.join(units) + r')\b'
 
+# Expanded ingredient noise words
+noise_words = {
+    'optional', 'bite', 'size', 'taste', 'garnish', 'topping', 'filling', 'coating',
+    'spread', 'sauce', 'dip', 'glaze', 'frosting', 'icing', 'powder', 'dust', 'sprinkle',
+    'drizzle', 'splash', 'dash', 'pinch', 'touch', 'hint', 'bit', 'drop', 'dollop',
+    'scoop', 'handful', 'portion', 'serving', 'side', 'accompaniment', 'mixture', 'blend',
+    'half', 'halve', 'inch', 'sized', 'supreme', 'san', 'very',
+    'hot', 'cold', 'warm', 'soft', 'hard', 'fresh', 'dried', 'cooked', 'raw', 'ripe',
+    'chopped', 'sliced', 'diced', 'minced', 'shredded', 'grated', 'crushed', 'melted', 
+    'frozen', 'thawed', 'boned', 'boneless', 'skinless', 'softened', 'beaten', 'sifted', 
+    'divided', 'separated', 'ground', 'all-purpose', 'plain', 'self-rising', 'firmly', 
+    'packed', 'light', 'heavy', 'white', 'broken', 'chipped', 'wedged', 'skinned', 
+    'trimmed', 'boiling', 'finely', 'coarsely', 'thinly', 'lean'
+}
 
 def connect_to_database():
     """Create database connection."""
@@ -40,13 +53,11 @@ def connect_to_database():
     engine = create_engine(connection_string)
     return engine
 
-
 def get_total_count(engine):
     """Get total number of recipes in FoodKG table."""
     query = 'SELECT COUNT(*) FROM "FoodKG"'
     result = pd.read_sql(query, engine)
     return result.iloc[0, 0]
-
 
 def fetch_foodkg_batch(engine, offset, batch_size):
     """Fetch a batch of FoodKG data from database."""
@@ -54,140 +65,82 @@ def fetch_foodkg_batch(engine, offset, batch_size):
     df = pd.read_sql(query, engine)
     return df
 
-
-def singularize(word):
-    """Simple singularization of English words."""
-    # Don't singularize very short words
-    if len(word) <= 3:
-        return word
-    
-    # Regular patterns
-    if word.endswith('ies') and len(word) > 4:
-        return word[:-3] + 'y'
-    elif word.endswith('ves'):
-        return word[:-3] + 'f'
-    elif word.endswith('oes'):
-        return word[:-2]
-    elif word.endswith('ses'):
-        return word[:-2]
-    elif word.endswith('xes'):
-        return word[:-2]
-    elif word.endswith('ches'):
-        return word[:-2]
-    elif word.endswith('shes'):
-        return word[:-2]
-    elif word.endswith('s') and not word.endswith('ss') and not word.endswith('us'):
-        return word[:-1]
-    
-    return word
-
+def clean_ingredient(ing):
+    """Clean a single ingredient string."""
+    ing_clean = ing.lower()
+    ing_clean = re.sub(r'\s*\([^)]*\)\s*', ' ', ing_clean)  # remove parenthesis
+    ing_clean = re.sub(r'\b(and|or)\b', ',', ing_clean)  # split and/or with commas
+    ing_clean = re.sub(r'\bof\b', ' ', ing_clean)  # remove of
+    ing_clean = re.sub(r'\d+\/\d+|\d+', '', ing_clean)  # remove numbers and fractions
+    ing_clean = re.sub(pattern_units, '', ing_clean, flags=re.IGNORECASE)  # remove units
+    ing_clean = re.sub(r'[^a-zA-Z\s,]', '', ing_clean)  # remove punctuation except commas
+    ing_clean = re.sub(r'\s+', ' ', ing_clean).strip()  # fix spacing
+    return ing_clean
 
 def process_ingredient_list(ingredient_list):
     """Process a single recipe's ingredient list."""
-    import ast
-    
-    # Convert string to list if needed
     if isinstance(ingredient_list, str):
-        ingredient_list = ast.literal_eval(ingredient_list)
+        try:
+            ingredient_list = ast.literal_eval(ingredient_list)
+        except (ValueError, SyntaxError):
+            return []
     
     recipe_ingredients = []
+    seen = set()
     
-    for ing in ingredient_list:
-        # Lowercase
-        ing_clean = ing.lower()
-        
-        # Remove numbers and fractions
-        ing_clean = re.sub(r'\d+\/\d+|\d+', '', ing_clean)
-        
-        # Remove units
-        ing_clean = re.sub(pattern_units, '', ing_clean, flags=re.IGNORECASE)
-        
-        # Remove punctuation and extra spaces
-        ing_clean = re.sub(r'[^a-zA-Z\s]', '', ing_clean)
-        ing_clean = re.sub(r'\s+', ' ', ing_clean).strip()
-        
-        # Skip if empty after cleaning
-        if not ing_clean:
-            continue
-        
-        # Use SpaCy to extract nouns
-        doc = nlp(ing_clean)
-        nouns = [token.text for token in doc if token.pos_ == 'NOUN']
-        
-        if nouns:
-            # Singularize each noun
-            singular_nouns = [singularize(noun) for noun in nouns]
-            # Join nouns and add to recipe ingredients
-            ingredient_name = ' '.join(singular_nouns)
-            recipe_ingredients.append(ingredient_name)
+    texts_to_process = []
+    if ingredient_list:
+        for ing in ingredient_list:
+            cleaned = clean_ingredient(ing)
+            if cleaned:
+                texts_to_process.append(cleaned)
+    
+    if texts_to_process:
+        for doc in nlp.pipe(texts_to_process, batch_size=SPACY_BATCH_SIZE):
+            for chunk in doc.noun_chunks:
+                clean_tokens = []
+                for token in chunk:
+                    if token.text.lower() not in noise_words and not token.is_punct and not token.is_stop:
+                        if token == chunk.root:
+                            clean_tokens.append(token.lemma_.lower())  # lemmatize root noun
+                        else:
+                            clean_tokens.append(token.text.lower())
+                
+                if clean_tokens:
+                    processed = " ".join(clean_tokens)
+                    if processed and processed not in noise_words and processed not in seen:
+                        recipe_ingredients.append(processed)
+                        seen.add(processed)
     
     return recipe_ingredients
 
-
 def main():
     """Main processing function with batch processing."""
-    import os
-    
-    # Connect to database
-    print("Connecting to database...")
     engine = connect_to_database()
-    
-    # Get total count
     total_recipes = get_total_count(engine)
     print(f"Total recipes to process: {total_recipes}")
     
-    # Set batch size
-    batch_size = 200
+    output_path = 'SpacyProcessing/foodkg_spacy_processed.csv'
     
-    # Output file
-    output_path = 'data/output/foodkg_spacy_processed.csv'
-    
-    # Create output directory if it doesn't exist
-    os.makedirs('data/output', exist_ok=True)
-    
-    # Initialize or clear output file with headers
     with open(output_path, 'w') as f:
-        f.write('recipeId,original_ingredients,processed_ingredients\n')
+        f.write('recipe_id,original_ingredients,processed_ingredients\n')
     
-    # Process in batches
     processed_count = 0
-    
-    for offset in range(0, total_recipes, batch_size):
-        # Fetch batch
-        print(f"\nFetching batch: recipes {offset} to {offset + batch_size}...")
-        df_batch = fetch_foodkg_batch(engine, offset, batch_size)
-        
+    for offset in range(0, total_recipes, BATCH_SIZE):
+        df_batch = fetch_foodkg_batch(engine, offset, BATCH_SIZE)
         if df_batch.empty:
             break
         
-        # Process each recipe in batch
-        results = []
-        for idx, row in df_batch.iterrows():
-            recipe_id = row['id']
-            original_ingredients = row['ingredients']
-            
-            # Process ingredients
-            processed = process_ingredient_list(original_ingredients)
-            
-            results.append({
-                'recipeId': recipe_id,
-                'original_ingredients': original_ingredients,
-                'processed_ingredients': processed
-            })
-            
-            processed_count += 1
-        
-        # Append batch results to CSV
-        df_results = pd.DataFrame(results)
+        df_batch['processed_ingredients'] = df_batch['ingredients'].apply(process_ingredient_list)
+        df_results = df_batch[['id', 'ingredients', 'processed_ingredients']].copy()
+        df_results.columns = ['recipe_id', 'original_ingredients', 'processed_ingredients']
         df_results.to_csv(output_path, mode='a', header=False, index=False)
         
-        # Print progress
+        processed_count += len(df_batch)
         percentage = (processed_count / total_recipes) * 100
-        print(f"Progress: {processed_count}/{total_recipes} recipes ({percentage:.1f}%)")
+        print(f"Progress: {processed_count}/{total_recipes} ({percentage:.1f}%)")
     
-    print(f"\n✓ Processing complete! Results saved to {output_path}")
-    print(f"Total recipes processed: {processed_count}")
-
+    print(f"\nComplete! Processed {processed_count} recipes")
 
 if __name__ == "__main__":
     main()

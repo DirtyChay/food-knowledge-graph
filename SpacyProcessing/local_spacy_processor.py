@@ -9,6 +9,8 @@ import pandas as pd
 
 from spacy_processor import process_ingredient_list
 
+# Set to a number to limit, set to None for all
+# num_rows_to_run = None
 num_rows_to_run = 100
 # Configuration constants
 BATCH_SIZE = 4000
@@ -20,7 +22,8 @@ def main():
     # Load df and cut down to number of relevant rows
     foodkg_df = pd.read_csv('../data/raw/nourish_public_FoodKG.csv')
     foodkg_df.sort_values(by=['id'], inplace=True)
-    foodkg_df = foodkg_df.head(num_rows_to_run)
+    if num_rows_to_run is not None:
+        foodkg_df = foodkg_df.head(num_rows_to_run)
 
     total_recipes = len(foodkg_df)
     print(f"Total recipes to process: {total_recipes}")

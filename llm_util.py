@@ -92,7 +92,7 @@ def process_food_kg_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, r
 
 def process_branded_food_experimental_df(df,
                                          client,
-                                         model="qwen/qwen3-4b-2507",
+                                         model,
                                          batch_size=100,
                                          restart=False,
                                          stop_at=None):
@@ -104,56 +104,40 @@ def process_branded_food_experimental_df(df,
     CKPT = Path("checkpoints/.food_branded_experimental_checkpoint.json")
     OUT_DIR = Path("outputs/food_branded_experimental")  # directory of many part files
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-
     # Pick up where left off
     last_id = get_last_id(CKPT)
     if last_id is None or restart:
         last_id = -1
-
     id_column = "fdc_id"  # stable and increasing identifier
-
     # Work only on remaining rows, sorted by id for deterministic batches
     todo = df[df[id_column] > last_id].sort_values(id_column)
     if todo.empty:
         print("Nothing to do. All caught up.")
         return
-
     # Split into size-limited batches
     n = len(todo)
     num_batches = int(np.ceil(n / batch_size))
-
     for i in range(num_batches):
         start = i * batch_size
         # stop if written our max
         if stop_at is not None and start >= stop_at:
             break
-
         stop = min((i + 1) * batch_size, n)
         batch = todo.iloc[start:stop].copy()
-
         # Apply extractor on just this batch
         batch["mapped_ingredient"] = batch["description"].apply(
-            lambda d: map_to_ingredient(
-                d,
-                model=model,
-                client=client,
-                max_tokens=16,  # >= 16 for Responses API
-            )
+            lambda d: map_to_ingredient(description=d, model=model, client=client)
         )
-
         # Write to CSV safely
         part_file = OUT_DIR / f"part_{int(batch[id_column].min())}_{int(batch[id_column].max())}.csv"
         tmp = part_file.with_suffix(part_file.suffix + ".tmp")
         batch[[id_column, "description", "mapped_ingredient"]].to_csv(tmp, index=False)
         tmp.replace(part_file)
-
         # Advance checkpoint atomically
         last_written = int(batch[id_column].max())
         set_last_id(last_written, CKPT)
-
         # Optional: log progress
         print(f"Wrote {part_file.name} ({start}:{stop}) — checkpoint={last_written}")
-
     print("Done.")
 
 
@@ -190,10 +174,28 @@ def _deduplicate_preserve_order(items):
     return out
 
 
+def response_to_text(response) -> str:
+    """
+    Extract plain text from a Responses API Response object.
+    Looks through `response.output` for the first output_text block.
+    """
+    # Future-proof: if SDK ever adds a convenience attribute
+    if hasattr(response, "output_text"):
+        return response.output_text
+
+    for item in getattr(response, "output", []) or []:
+        # We care about message items with content
+        if getattr(item, "type", None) == "message":
+            for c in getattr(item, "content", []) or []:
+                if getattr(c, "type", None) == "output_text":
+                    return c.text or ""
+    return ""
+
+
 def map_to_ingredient(
         description,
-        model="gpt-4o-mini",
-        client=None,
+        model,
+        client,
         max_tokens=16,  # must be >= 16 for new models
 ):
     # Guard for NaN / missing client
@@ -205,14 +207,9 @@ def map_to_ingredient(
         return []  # guard for empty
 
     def _clean_response(raw: str) -> str:
-        """Safely clean the model output and return a single-line string."""
         if not raw:
             return ""
-        # Strip whitespace + common wrappers
         cleaned = str(raw).strip().strip('`"\'')
-        if not cleaned:
-            return ""
-        # Take only the first line, then strip again
         first_line = cleaned.splitlines()[0].strip().strip('`"\'')
         return first_line
 
@@ -225,10 +222,11 @@ def map_to_ingredient(
             {"role": "system", "content": SYSTEM_MSG_PRODUCTS},
             {"role": "user", "content": user_msg},
         ],
-        max_output_tokens=max_tokens,
+        # max_output_tokens=max_tokens,
     )
 
-    parsed = _clean_response(getattr(response, "output_text", "") or "")
+    print("Response:\n", response)
+    parsed = _clean_response(response_to_text(response))
 
     # Basic validation: must be a non-empty string of text
     if not parsed or parsed.lower() in {"unknown", "none"}:
@@ -249,7 +247,7 @@ Input product: {text}"""
             max_output_tokens=max_tokens,
         )
 
-        parsed = _clean_response(getattr(response2, "output_text", "") or "")
+        parsed = _clean_response(response_to_text(response2))
 
     # If still nothing, fall back to empty string
     return parsed if parsed else ""

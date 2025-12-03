@@ -95,17 +95,23 @@ def process_branded_food_experimental_df(df,
                                          model="qwen/qwen3-4b-2507",
                                          batch_size=100,
                                          restart=False,
-                                         stop_at=None
-                                         ):
+                                         stop_at=None):
+    """
+    Processes a branded food dataframe in batches, mapping descriptions to ingredients,
+    writing part files, and maintaining a checkpoint on fdc_id.
+    """
     # Setup
     CKPT = Path("checkpoints/.food_branded_experimental_checkpoint.json")
     OUT_DIR = Path("outputs/food_branded_experimental")  # directory of many part files
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+
     # Pick up where left off
-    last_id = get_last_id(CKPT)  # your function
+    last_id = get_last_id(CKPT)
     if last_id is None or restart:
         last_id = -1
+
     id_column = "fdc_id"  # stable and increasing identifier
+
     # Work only on remaining rows, sorted by id for deterministic batches
     todo = df[df[id_column] > last_id].sort_values(id_column)
     if todo.empty:
@@ -121,16 +127,18 @@ def process_branded_food_experimental_df(df,
         # stop if written our max
         if stop_at is not None and start >= stop_at:
             break
-        # keep going
+
         stop = min((i + 1) * batch_size, n)
         batch = todo.iloc[start:stop].copy()
 
         # Apply extractor on just this batch
         batch["mapped_ingredient"] = batch["description"].apply(
-            map_to_ingredient,
-            model=model,
-            client=client,
-            max_tokens=10
+            lambda d: map_to_ingredient(
+                d,
+                model=model,
+                client=client,
+                max_tokens=16,  # >= 16 for Responses API
+            )
         )
 
         # Write to CSV safely
@@ -140,10 +148,11 @@ def process_branded_food_experimental_df(df,
         tmp.replace(part_file)
 
         # Advance checkpoint atomically
-        set_last_id(int(batch[id_column].max()), CKPT)
+        last_written = int(batch[id_column].max())
+        set_last_id(last_written, CKPT)
 
         # Optional: log progress
-        print(f"Wrote {part_file.name} ({start}:{stop}) — checkpoint={get_last_id(CKPT)}")
+        print(f"Wrote {part_file.name} ({start}:{stop}) — checkpoint={last_written}")
 
     print("Done.")
 
@@ -185,62 +194,64 @@ def map_to_ingredient(
         description,
         model="gpt-4o-mini",
         client=None,
-        max_tokens=10,
+        max_tokens=16,  # must be >= 16 for new models
 ):
-    if description is None or client is None: return []  # guard for NaN
-    text = str(description).strip()
-    if not text: return []  # guard for empty
-    # max_tokens = 800
-    # reinforce JSON-only on the user message
-    user_msg = f"""Input product: {text}"""
+    # Guard for NaN / missing client
+    if description is None or client is None:
+        return []
 
-    response = client.chat.completions.create(
+    text = str(description).strip()
+    if not text:
+        return []  # guard for empty
+
+    def _clean_response(raw: str) -> str:
+        """Safely clean the model output and return a single-line string."""
+        if not raw:
+            return ""
+        # Strip whitespace + common wrappers
+        cleaned = str(raw).strip().strip('`"\'')
+        if not cleaned:
+            return ""
+        # Take only the first line, then strip again
+        first_line = cleaned.splitlines()[0].strip().strip('`"\'')
+        return first_line
+
+    # ---------- First attempt ----------
+    user_msg = f"Input product: {text}"
+
+    response = client.responses.create(
         model=model,
-        messages=[
+        input=[
             {"role": "system", "content": SYSTEM_MSG_PRODUCTS},
             {"role": "user", "content": user_msg},
         ],
-        max_tokens=max_tokens,
-        # temperature=0,
+        max_output_tokens=max_tokens,
     )
-    content = response.choices[0].message.content
-    # Strip whitespace, punctuation, quotes, and code fences
-    parsed = (
-        content.strip()
-        .strip('`')
-        .strip('"')
-        .strip("'")
-        .splitlines()[0]  # if it accidentally includes multiple lines
-        .strip()
-    )
+
+    parsed = _clean_response(getattr(response, "output_text", "") or "")
+
     # Basic validation: must be a non-empty string of text
     if not parsed or parsed.lower() in {"unknown", "none"}:
-        # Try a repair prompt once
+        # ---------- Repair attempt ----------
         repair_msg = f"""Your previous response was invalid or empty.
 
-    Return ONLY one lowercase ingredient label as plain text.
-    No JSON, no quotes, no extra words.
+Return ONLY one lowercase ingredient label as plain text.
+No JSON, no quotes, no extra words.
 
-    Input product: {text}"""
+Input product: {text}"""
 
-        response2 = client.chat.completions.create(
+        response2 = client.responses.create(
             model=model,
-            messages=[
-                {"role": "system", "content": SYSTEM_MSG_INGREDIENTS},
+            input=[
+                {"role": "system", "content": SYSTEM_MSG_PRODUCTS},
                 {"role": "user", "content": repair_msg},
             ],
-            max_tokens=max_tokens,
-            # temperature=0,
+            max_output_tokens=max_tokens,
         )
-        content = response2.choices[0].message.content or ""
-        parsed = (
-            content.strip()
-            .strip('`')
-            .strip('"')
-            .strip("'")
-            .splitlines()[0]
-            .strip()
-        )
+
+        parsed = _clean_response(getattr(response2, "output_text", "") or "")
+
+    # If still nothing, fall back to empty string
     return parsed if parsed else ""
 
 

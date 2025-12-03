@@ -10,8 +10,8 @@ import pandas as pd
 from spacy_processor import process_ingredient_list
 
 # Set to a number to limit, set to None for all
-num_rows_to_run = None
-# num_rows_to_run = 100
+# num_rows_to_run = None
+num_rows_to_run = 100
 # Configuration constants
 BATCH_SIZE = 4000
 SPACY_BATCH_SIZE = 256

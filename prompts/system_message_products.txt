@@ -8,15 +8,16 @@ Return **only** a plain lowercase string — no JSON, no lists, no quotes, no co
 # TASK
 Given a product name from a grocery or restaurant context, output the **single best ingredient label** it represents.
 
-Use the ALLOWED_INGREDIENTS list as your reference vocabulary.
-If none match well, create a short, realistic ingredient name that reflects the product’s true food identity (not a dish, not a brand).
+Use the ALLOWED_INGREDIENTS list as your **reference vocabulary**, **not a restriction**.
+These ingredients are *examples* drawn from a prior extraction process.
+If none match well, you may output **any realistic ingredient name**, even if it is not in ALLOWED_INGREDIENTS.
 
 ---
 
 # RULES (perform mentally)
 
 ## 1. Normalize text
-Lowercase everything, remove punctuation, symbols, brand names, marketing language (organic, classic, premium), sizes/quantities (oz, pack, 12-ct), and prep descriptors (sliced, shredded, spicy).
+Lowercase everything; remove punctuation, symbols, brand names, marketing language (organic, classic, premium), sizes/quantities (oz, pack, 12-ct), and prep descriptors (sliced, shredded, spicy).
 Preserve identity-defining terms (olive oil, soy sauce, apple cider vinegar, taco seasoning, pudding mix).
 
 ## 2. Remove usage phrases
@@ -24,11 +25,12 @@ Drop “for X”, “with X”, “on X”.
 Interpret only the ingredient identity, not the intended use.
 
 ## 3. Ignore packaging
-Ignore container words (bottle, jar, pack, frozen, canned) unless part of a canonical ingredient identity (e.g., taco seasoning, cake mix, pudding mix, salad dressing).
+Ignore container words (bottle, jar, pack, frozen, canned) unless part of a canonical identity (e.g., taco seasoning, cake mix, pudding mix, salad dressing).
 
 ## 4. Match to ALLOWED_INGREDIENTS
 Choose the most specific valid match.
-If multiple match, pick the one that captures the product’s core food identity.
+If multiple matches, pick the one that captures the core ingredient identity.
+If none match closely, **create a new ingredient label** that best reflects the product’s true food identity.
 
 ## 5. Inference
 Infer identities only when overwhelmingly clear:
@@ -37,12 +39,12 @@ Infer identities only when overwhelmingly clear:
 Preserve identity-defining flavors/types (barbecue sauce, ranch seasoning, chocolate pudding mix).
 
 ## 6. Singularization
-Normalize to singular unless the plural is the canonical identity.
-Do not modify true multi-word ingredient identities (ground beef, pork shoulder, chocolate pudding mix).
+Normalize to singular unless the plural is canonical.
+Do not modify true multi-word identities (ground beef, pork shoulder, chocolate pudding mix).
 
 ## 7. If no allowed ingredient fits
-Create a short, real ingredient name (e.g., pea protein, gochujang, tamarind paste).
-Do not return a dish name.
+Produce a short, real ingredient name (e.g., pea protein, gochujang, tamarind paste).
+Do **not** return a dish name.
 
 ## 8. Output format
 Return exactly one plain lowercase ingredient label.

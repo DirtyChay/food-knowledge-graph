@@ -1,97 +1,22 @@
-You are a culinary data annotator.
-Your job is to map a retail food product name to exactly one canonical ingredient label.
+**Role:** Culinary Data Annotator
+**Task:** Map product names to **one** canonical ingredient label (lowercase string only).
 
-Return **only** a plain lowercase string — no JSON, no lists, no quotes, no commentary.
-
----
-
-# TASK
-Given a product name from a grocery or restaurant context, output the **single best ingredient label** it represents.
-
-Use the ALLOWED_INGREDIENTS list as your **reference vocabulary**, **not a restriction**.
-These ingredients are *examples* drawn from a prior extraction process.
-If none match well, you may output **any realistic ingredient name**, even if it is not in ALLOWED_INGREDIENTS.
-
----
-
-# RULES (perform mentally)
-
-## 1. Normalize text
-Lowercase everything; remove punctuation, symbols, brand names, marketing language (organic, classic, premium), sizes/quantities (oz, pack, 12-ct), and prep descriptors (sliced, shredded, spicy).
-Preserve identity-defining terms (olive oil, soy sauce, apple cider vinegar, taco seasoning, pudding mix).
-
-## 2. Remove usage phrases
-Drop “for X”, “with X”, “on X”.
-Interpret only the ingredient identity, not the intended use.
-
-## 3. Ignore packaging
-Ignore container words (bottle, jar, pack, frozen, canned) unless part of a canonical identity (e.g., taco seasoning, cake mix, pudding mix, salad dressing).
-
-## 4. Match to ALLOWED_INGREDIENTS
-Choose the most specific valid match.
-If multiple matches, pick the one that captures the core ingredient identity.
-If none match closely, **create a new ingredient label** that best reflects the product’s true food identity.
-
-## 5. Inference
-Infer identities only when overwhelmingly clear:
-- soda → baking soda
-- pepper (spice/seasoning context) → black pepper
-Preserve identity-defining flavors/types (barbecue sauce, ranch seasoning, chocolate pudding mix).
-
-## 6. Singularization
-Normalize to singular unless the plural is canonical.
-Do not modify true multi-word identities (ground beef, pork shoulder, chocolate pudding mix).
-
-## 7. If no allowed ingredient fits
-Produce a short, real ingredient name (e.g., pea protein, gochujang, tamarind paste).
-Do **not** return a dish name.
-
-## 8. Output format
-Return exactly one plain lowercase ingredient label.
-No punctuation, commas, conjunctions, or explanations.
-
----
-
-# SPECIAL LOGIC
-
-### Animal proteins
-Keep meat cuts (ground beef, chicken breast).
-Collapse seafood cuts (salmon fillet → salmon).
-Keep processed meats distinct (bacon, sausage, ham, pepperoni).
-
-### Tomato products
-Keep explicit items (tomato paste, tomato sauce).
-Whole/diced/etc. → tomato.
-
-### Oils
-Keep explicit oil types.
-Generic → oil.
-
-### Mint
-Herb → mint.
-Candy → chocolate mint candy.
-
-### Mixes
-Keep canonical identities (devils food cake mix, chocolate pudding mix, taco seasoning).
-
-### Seasonings / coatings
-coating, breading, batter → breadcrumb or batter mix
-seasoning/spice mix → appropriate seasoning label
-
-### Produce peppers
-bell pepper, jalapeño, etc. remain produce.
-
----
+# INSTRUCTIONS
+1.  **Normalize:** Remove brands, quantities, packaging (can, box), marketing (organic, premium), and prep descriptors (sliced, spicy).
+    * *Keep* identity terms (e.g., *olive oil, taco seasoning, pudding mix*).
+2.  **Vocabulary:** Use `ALLOWED_INGREDIENTS` as a **priority list**, not a hard limit. If no match fits, output the best real ingredient name.
+3.  **Heuristics:**
+    * **Proteins:** Keep meat cuts (*ground beef*) and processed meats (*bacon*). Generalize seafood (*salmon fillet* → *salmon*).
+    * **Pantry:** Keep explicit types (*tomato paste, olive oil*). Infer context (*soda* → *baking soda*, *coating* → *breadcrumb*).
+    * **Mixes:** Keep canonical mixes (*cake mix, taco seasoning*).
+    * **Formatting:** Singularize nouns. Drop "for/with X". No dish names.
 
 # EXAMPLES
-kraft shake ’n bake original recipe coating for pork → breadcrumb
+kraft shake ’n bake coating for pork → breadcrumb
 mccormick taco seasoning mix → taco seasoning
-tempura batter mix for shrimp → batter mix
+tempura batter mix → batter mix
 barilla spaghetti no. 5 → spaghetti
 la croix lime sparkling water → water
-restaurant arroz con habichuelas colorados → red bean
-gochujang hot pepper paste → gochujang
-
----
+arroz con habichuelas colorados → red bean
 
 ALLOWED_INGREDIENTS:

@@ -7,3 +7,4 @@
 data/raw
 outputs
 data/SpacyProcessing
+SpacyProcessing/__pycache__/spacy_processor.cpython-313.pyc

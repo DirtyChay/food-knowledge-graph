@@ -5,6 +5,17 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+# To be appended at the end of the prompt for products
+# with open("checkpoints/qwen_unique_ingredients.txt", "r", encoding="utf-8") as f:
+#     UNIQUE_INGREDIENTS = f.read()
+
+with open("SpacyProcessing/spacy_unique_ingredients.txt", "r", encoding="utf-8") as f:
+    UNIQUE_INGREDIENTS = f.read()
+
+with open("prompts/system_message_products.txt", "r", encoding="utf-8") as f:
+    SYSTEM_MSG_PRODUCTS = f.read()
+    SYSTEM_MSG_PRODUCTS += UNIQUE_INGREDIENTS
+
 
 def get_last_id(CKPT):
     if CKPT.exists():
@@ -79,8 +90,13 @@ def process_food_kg_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, r
     print("Done.")
 
 
-def process_branded_food_experimental_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, restart=False,
-                                         stop_at=None):
+def process_branded_food_experimental_df(df,
+                                         client,
+                                         model="qwen/qwen3-4b-2507",
+                                         batch_size=100,
+                                         restart=False,
+                                         stop_at=None
+                                         ):
     # Setup
     CKPT = Path("checkpoints/.food_branded_experimental_checkpoint.json")
     OUT_DIR = Path("outputs/food_branded_experimental")  # directory of many part files
@@ -114,6 +130,7 @@ def process_branded_food_experimental_df(df, client, model="qwen/qwen3-4b-2507",
             map_to_ingredient,
             model=model,
             client=client,
+            max_tokens=10
         )
 
         # Write to CSV safely
@@ -151,14 +168,6 @@ def assemble_branded_food_experimental_df():
 with open("prompts/system_message_ingredients.txt", "r", encoding="utf-8") as f:
     SYSTEM_MSG_INGREDIENTS = f.read()
 
-# To be appended at the end of the prompt for products
-with open("checkpoints/unique_ingredients.txt", "r", encoding="utf-8") as f:
-    UNIQUE_INGREDIENTS = f.read()
-
-with open("prompts/system_message_products.txt", "r", encoding="utf-8") as f:
-    SYSTEM_MSG_PRODUCTS = f.read()
-    SYSTEM_MSG_PRODUCTS += UNIQUE_INGREDIENTS
-
 
 def _deduplicate_preserve_order(items):
     # Post processing step to remove duplicate entries
@@ -176,6 +185,7 @@ def map_to_ingredient(
         description,
         model="gpt-4o-mini",
         client=None,
+        max_tokens=10,
 ):
     if description is None or client is None: return []  # guard for NaN
     text = str(description).strip()
@@ -190,8 +200,8 @@ def map_to_ingredient(
             {"role": "system", "content": SYSTEM_MSG_PRODUCTS},
             {"role": "user", "content": user_msg},
         ],
-        # max_tokens=max_tokens,
-        temperature=0,
+        max_tokens=max_tokens,
+        # temperature=0,
     )
     content = response.choices[0].message.content
     # Strip whitespace, punctuation, quotes, and code fences
@@ -219,8 +229,8 @@ def map_to_ingredient(
                 {"role": "system", "content": SYSTEM_MSG_INGREDIENTS},
                 {"role": "user", "content": repair_msg},
             ],
-            # max_tokens=max_tokens,
-            temperature=0,
+            max_tokens=max_tokens,
+            # temperature=0,
         )
         content = response2.choices[0].message.content or ""
         parsed = (

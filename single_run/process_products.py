@@ -1,5 +1,6 @@
 import asyncio
 import os
+import time
 from typing import List, Dict, Any
 
 import pandas as pd
@@ -19,7 +20,7 @@ OUTPUT_PATH = "results_async.csv"  # where we store results
 SYSTEM_PROMPT_PATH = "../prompts/system_message_products.txt"
 UNIQUE_INGREDIENTS_PATH = "../SpacyProcessing/spacy_unique_ingredients.txt"
 
-CONCURRENCY = 100  # how many requests in-flight at once
+CONCURRENCY = 40  # how many requests in-flight at once
 CHUNK_SIZE = 5000  # how many rows to schedule before flushing to disk
 MAX_RETRIES = 5  # per-request retry attempts
 
@@ -80,6 +81,11 @@ async def call_model_single(
                     ],
                     max_tokens=10,
                 )
+                # usage = resp.usage
+                # print(
+                #     f"[{row_id}] prompt_tokens={usage.prompt_tokens}, "
+                #     f"cached_tokens={usage.prompt_tokens_details.cached_tokens}"
+                # )
 
             # Extract main text; adjust if you want JSON, etc.
             content = resp.choices[0].message.content
@@ -186,9 +192,9 @@ def process_dataframe_resumable(df: pd.DataFrame):
     for start in range(0, total_remaining, CHUNK_SIZE):
         end = min(start + CHUNK_SIZE, total_remaining)
         df_chunk = df_to_do.iloc[start:end]
-
         print(f"\nProcessing rows {start}–{end} (chunk size {len(df_chunk)})...")
 
+        start_time = time.time()
         # Run this chunk asynchronously
         results = asyncio.run(
             process_chunk_async(
@@ -209,7 +215,9 @@ def process_dataframe_resumable(df: pd.DataFrame):
         )
         first_write = False
 
+        end_time = time.time()
         print(f"Chunk {start}–{end} done, wrote {len(results)} rows to {OUTPUT_PATH}.")
+        print(f"Time elapsed: {end_time - start_time:.4f} seconds")
 
     print("\nAll remaining rows processed.")
 

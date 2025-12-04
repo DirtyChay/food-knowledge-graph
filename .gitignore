@@ -10,3 +10,4 @@ data/SpacyProcessing
 SpacyProcessing/__pycache__/spacy_processor.cpython-313.pyc
 run1
 run2
+single_run/results_async.csv

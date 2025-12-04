@@ -13,3 +13,4 @@ run2
 single_run/results_async.csv
 batches/results_part_*
 batches/batch_results_all.csv
+combine_data/mapped_responses.csv

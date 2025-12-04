@@ -20,7 +20,7 @@ OUTPUT_PATH = "results_async.csv"  # where we store results
 SYSTEM_PROMPT_PATH = "../prompts/system_message_products.txt"
 UNIQUE_INGREDIENTS_PATH = "../SpacyProcessing/spacy_unique_ingredients.txt"
 
-CONCURRENCY = 40  # how many requests in-flight at once
+CONCURRENCY = 35  # how many requests in-flight at once
 CHUNK_SIZE = 5000  # how many rows to schedule before flushing to disk
 MAX_RETRIES = 5  # per-request retry attempts
 
@@ -232,7 +232,4 @@ if __name__ == "__main__":
     print("Loading full DataFrame...")
     df_big = pd.read_csv(INPUT_CSV, skiprows=range(1, start_offset + 1))  # dont process what was batched
     print("Dataframe size:", len(df_big))
-    # Optionally sanity-check
-    # assert len(df_big) == 1666279
-
     process_dataframe_resumable(df_big)

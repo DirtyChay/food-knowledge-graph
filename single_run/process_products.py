@@ -17,7 +17,7 @@ ID_COLUMN = "fdc_id"  # unique identifier per row
 TEXT_COLUMN = "description"  # text you send in the user message
 
 OUTPUT_PATH = "results_async.csv"  # where we store results
-SYSTEM_PROMPT_PATH = "../prompts/system_message_products.txt"
+SYSTEM_PROMPT_PATH = "../llm_processing/prompts/system_message_products.txt"
 UNIQUE_INGREDIENTS_PATH = "../SpacyProcessing/spacy_unique_ingredients.txt"
 
 CONCURRENCY = 35  # how many requests in-flight at once

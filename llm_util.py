@@ -12,7 +12,7 @@ import pandas as pd
 with open("SpacyProcessing/spacy_unique_ingredients.txt", "r", encoding="utf-8") as f:
     UNIQUE_INGREDIENTS = f.read()
 
-with open("prompts/system_message_products.txt", "r", encoding="utf-8") as f:
+with open("llm_processing/prompts/system_message_products.txt", "r", encoding="utf-8") as f:
     SYSTEM_MSG_PRODUCTS = f.read()
     SYSTEM_MSG_PRODUCTS += UNIQUE_INGREDIENTS
 
@@ -158,7 +158,7 @@ def assemble_branded_food_experimental_df():
 
 
 # Load System Prompts
-with open("prompts/system_message_ingredients.txt", "r", encoding="utf-8") as f:
+with open("llm_processing/prompts/system_message_ingredients.txt", "r", encoding="utf-8") as f:
     SYSTEM_MSG_INGREDIENTS = f.read()
 
 

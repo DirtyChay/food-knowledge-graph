@@ -1,3 +1,11 @@
+"""
+A script for processing rows of data asynchronously using the OpenAI GPT model with resumable logic.
+
+This script processes a large dataset in chunks, sending concurrent asynchronous requests to the
+OpenAI API. Completed rows are saved to disk, and interrupted runs can resume without reprocessing
+already-completed rows. Special features include exponential backoff on retries, request concurrency
+limiting, and resumable writes to a CSV file.
+"""
 import asyncio
 import os
 import time
@@ -14,10 +22,10 @@ MODEL_NAME = "gpt-4o-mini-2024-07-18"
 API_KEY = os.getenv("OPENAI_API_KEY")
 
 ID_COLUMN = "fdc_id"  # unique identifier per row
-TEXT_COLUMN = "description"  # text you send in the user message
+TEXT_COLUMN = "description"  # text sent in the user message
 
-OUTPUT_PATH = "results_async.csv"  # where we store results
-SYSTEM_PROMPT_PATH = "../llm_processing/prompts/system_message_products.txt"
+OUTPUT_PATH = "../data/output/processed_products_no_batch.csv"  # where we store results
+SYSTEM_PROMPT_PATH = "prompts/system_message_products.txt"
 UNIQUE_INGREDIENTS_PATH = "../SpacyProcessing/spacy_unique_ingredients.txt"
 
 CONCURRENCY = 35  # how many requests in-flight at once
@@ -186,6 +194,7 @@ def process_dataframe_resumable(df: pd.DataFrame):
         print("Nothing to do, all rows already processed.")
         return
 
+    os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     first_write = not os.path.exists(OUTPUT_PATH)
 
     # --- Process in chunks ---
@@ -222,14 +231,14 @@ def process_dataframe_resumable(df: pd.DataFrame):
     print("\nAll remaining rows processed.")
 
 
-# ------------- EXAMPLE USAGE -------------
 if __name__ == "__main__":
+    # We ran 4 batches that consisted of the first 100,000 rows of the dataset.
+    # Therefore, we remove these rows. If not using batches, you can skip this step.
     num_batches_run = 4  # 4 uploaded successfully, 100k rows
     start_offset = 25000 * num_batches_run
-    # Example: df loaded from CSV with 1.8M rows
-    # You can replace this with however you construct your DataFrame.
+    # Load data
     INPUT_CSV = "../data/raw/usda_2022_food_branded_experimental_DESCRIPTION_ONLY.csv"
     print("Loading full DataFrame...")
-    df_big = pd.read_csv(INPUT_CSV, skiprows=range(1, start_offset + 1))  # dont process what was batched
-    print("Dataframe size:", len(df_big))
-    process_dataframe_resumable(df_big)
+    unbatched_df = pd.read_csv(INPUT_CSV, skiprows=range(1, start_offset + 1))  # dont process what was batched
+    print("Dataframe size:", len(unbatched_df))
+    process_dataframe_resumable(unbatched_df)

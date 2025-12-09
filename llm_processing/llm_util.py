@@ -9,10 +9,10 @@ import pandas as pd
 # with open("checkpoints/qwen_unique_ingredients.txt", "r", encoding="utf-8") as f:
 #     UNIQUE_INGREDIENTS = f.read()
 
-with open("SpacyProcessing/spacy_unique_ingredients.txt", "r", encoding="utf-8") as f:
+with open("../SpacyProcessing/spacy_unique_ingredients.txt", "r", encoding="utf-8") as f:
     UNIQUE_INGREDIENTS = f.read()
 
-with open("llm_processing/prompts/system_message_products.txt", "r", encoding="utf-8") as f:
+with open("prompts/system_message_products.txt", "r", encoding="utf-8") as f:
     SYSTEM_MSG_PRODUCTS = f.read()
     SYSTEM_MSG_PRODUCTS += UNIQUE_INGREDIENTS
 
@@ -41,7 +41,7 @@ def set_last_id(v, CKPT):
 
 def process_food_kg_df(df, client, model="qwen/qwen3-4b-2507", batch_size=100, restart=False, stop_at=None):
     # Setup
-    CKPT = Path("checkpoints/.foodkg_checkpoint.json")
+    CKPT = Path("../checkpoints/.foodkg_checkpoint.json")
     OUT_DIR = Path("outputs/ingredients_dataset")  # directory of many part files
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     # Pick up where left off
@@ -101,7 +101,7 @@ def process_branded_food_experimental_df(df,
     writing part files, and maintaining a checkpoint on fdc_id.
     """
     # Setup
-    CKPT = Path("checkpoints/.food_branded_experimental_checkpoint.json")
+    CKPT = Path("../checkpoints/.food_branded_experimental_checkpoint.json")
     OUT_DIR = Path("outputs/food_branded_experimental")  # directory of many part files
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     # Pick up where left off
@@ -158,7 +158,7 @@ def assemble_branded_food_experimental_df():
 
 
 # Load System Prompts
-with open("llm_processing/prompts/system_message_ingredients.txt", "r", encoding="utf-8") as f:
+with open("prompts/system_message_ingredients.txt", "r", encoding="utf-8") as f:
     SYSTEM_MSG_INGREDIENTS = f.read()
 
 

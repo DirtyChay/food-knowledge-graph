@@ -8,6 +8,7 @@
 data/raw/*
 # But do NOT ignore the directory itself
 !data/raw/
+!data/raw/README.md
 
 outputs
 data/SpacyProcessing

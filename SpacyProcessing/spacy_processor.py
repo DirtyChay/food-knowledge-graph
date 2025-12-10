@@ -4,7 +4,6 @@
     import pandas as pd
     from sqlalchemy import create_engine
 
-    # Database credentials
     HOST = "awesome-hw.sdsc.edu"
     PORT = 5432
     DATABASE = "nourish"
@@ -48,25 +47,21 @@
     }
 
     def connect_to_database():
-        """Create database connection."""
         connection_string = f"postgresql+psycopg2://{USER_PG}:{PASSWORD_PG}@{HOST}:{PORT}/{DATABASE}"
         engine = create_engine(connection_string)
         return engine
 
     def get_total_count(engine):
-        """Get total number of recipes in FoodKG table."""
         query = 'SELECT COUNT(*) FROM "FoodKG"'
         result = pd.read_sql(query, engine)
         return result.iloc[0, 0]
 
     def fetch_foodkg_batch(engine, offset, batch_size):
-        """Fetch a batch of FoodKG data from database."""
         query = f'SELECT id, ingredients FROM "FoodKG" ORDER BY id LIMIT {batch_size} OFFSET {offset}'
         df = pd.read_sql(query, engine)
         return df
 
     def clean_ingredient(ing):
-        """Clean a single ingredient string."""
         ing_clean = ing.lower()
         ing_clean = re.sub(r'\s*\([^)]*\)\s*', ' ', ing_clean)  # remove parenthesis
         ing_clean = re.sub(r'\b(and|or)\b', ',', ing_clean)  # split and/or with commas
@@ -78,7 +73,6 @@
         return ing_clean
 
     def process_ingredient_list(ingredient_list):
-        """Process a single recipe's ingredient list."""
         if isinstance(ingredient_list, str):
             try:
                 ingredient_list = ast.literal_eval(ingredient_list)
@@ -115,7 +109,6 @@
         return recipe_ingredients
 
     def main():
-        """Main processing function with batch processing."""
         engine = connect_to_database()
         total_recipes = get_total_count(engine)
         print(f"Total recipes to process: {total_recipes}")

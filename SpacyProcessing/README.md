@@ -5,6 +5,7 @@ This folder contains Spacy-based NLP processing for normalizing ingredient lists
 ## Overview
 
 The `spacy_processor.py` script:
+
 1. Connects to PostgreSQL database
 2. Fetches recipes from FoodKG table
 3. Uses Spacy NLP to extract core ingredient names
@@ -46,6 +47,7 @@ python spacy_processor.py
 ```
 
 This will:
+
 - Connect to the database
 - Process all recipes in the FoodKG table
 - Save results to `data/output/foodkg_spacy_processed.csv`
@@ -53,6 +55,7 @@ This will:
 ## Output
 
 The script creates a CSV file with columns:
+
 - `id`: Recipe ID
 - `title`: Recipe name
 - `ingredients`: Original ingredient list

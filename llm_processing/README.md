@@ -16,11 +16,6 @@ example of retrieving data in batches directly from the server.
 
 Retrieves `nourish_public_FoodKG` from the SQL server and downloads it locally as a CSV for convenient reuse.
 
-#### `retrieve_food_product`
-
-Retrieves `usda_2022_branded_food_product` from the SQL server and downloads it locally as a CSV.  
-Only the columns required for downstream processing are saved.
-
 #### `retrieve_usda_branded_experimental`
 
 Retrieves `usda_2022_food_branded_experimental` from the SQL server and downloads it locally as a CSV.  

@@ -14,7 +14,7 @@ DSE 203 Food Knowledge Graph
 
 
 
-END 2 END INSTRUCTIONS:
+##END 2 END INSTRUCTIONS:
 
 1) SPACY CODE, RECIPE PREPROCESSING - Navigate to SpacyProcessing folder and execute according to the readme.md file provided in that folder. Save the output csv as "foodkg_spacy_processed.csv" to be used later
 2) LLM CODE, PRODUCTS PREPROCESSING -

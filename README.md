@@ -1,9 +1,19 @@
 # food-knowledge-graph
 
-DSE 203 Food Knowledge Graph
-## INSTRUCTIONS:
+DSE 203 — Food Knowledge Graph
 
-1) SPACY CODE, RECIPE PREPROCESSING - Navigate to SpacyProcessing folder and execute according to the readme.md file provided in that folder. Save the output csv as "foodkg_spacy_processed.csv" to be used later
-2) LLM CODE, PRODUCTS PREPROCESSING - <Chayan add some comment here>. Save the output csv as "mapped_responses.csv" to be used later.
-3) NEO4J GRAPH CREATION - Navigate to neo4j folder and execute according to the readme.md file provided in that folder. Make sure to copy output CSVs from steps 1 and 2 to the local NEO4J folder path where you are running the graph creation script
+## Instructions
 
+1. **SpaCy Code & Recipe Preprocessing**  
+   Navigate to the `SpacyProcessing` folder and follow the steps in the `readme.md` file.  
+   Save the output CSV as **`foodkg_spacy_processed.csv`** for later use.
+
+2. **LLM Code & Product Preprocessing**  
+   Navigate to the `llm_processing` folder and execute the notebooks/scripts in the order specified in its
+   `readme.md`.  
+   Save the output CSV as **`mapped_responses.csv`** for later use.
+
+3. **Neo4j Graph Creation**  
+   Navigate to the `neo4j` folder and follow the instructions in its `readme.md`.  
+   Be sure to copy the output CSVs from **Steps 1 and 2** into the local Neo4j folder where you will run the graph
+   creation script.

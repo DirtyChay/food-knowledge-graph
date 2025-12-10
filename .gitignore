@@ -6,12 +6,13 @@
 .env
 # Ignore all files in the directory
 data/raw/*
-data/SpacyProcessing/*
+data/output/*
 # But do NOT ignore the directory itself
 !data/raw/
 !data/raw/README.md
-!data/SpacyProcessing
-!data/SpacyProcessing/spacy_unique_ingredients.txt
+!data/output
+!data/output/spacy_unique_ingredients.txt
+!data/output/README.md
 
 outputs
 SpacyProcessing/__pycache__/spacy_processor.cpython-313.pyc

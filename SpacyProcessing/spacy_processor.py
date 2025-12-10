@@ -120,7 +120,7 @@ def main():
     total_recipes = get_total_count(engine)
     print(f"Total recipes to process: {total_recipes}")
 
-    output_path = 'SpacyProcessing/foodkg_spacy_processed.csv'
+    output_path = 'output/foodkg_spacy_processed.csv'
 
     with open(output_path, 'w') as f:
         f.write('recipe_id,original_ingredients,processed_ingredients\n')

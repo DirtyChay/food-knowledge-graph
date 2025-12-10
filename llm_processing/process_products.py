@@ -30,11 +30,11 @@ ID_COLUMN = "fdc_id"
 TEXT_COLUMN = "description"
 
 # File path where processed results will be saved
-OUTPUT_PATH = "../data/output/processed_products_no_batch.csv"
+OUTPUT_PATH = "../data/output/mapped_responses.csv"
 # File path to the system prompt that defines the AI's behavior
 SYSTEM_PROMPT_PATH = "prompts/system_message_products.txt"
 # File path to unique ingredients list that will be appended to the system prompt
-UNIQUE_INGREDIENTS_PATH = "../data/SpacyProcessing/spacy_unique_ingredients.txt"
+UNIQUE_INGREDIENTS_PATH = "../data/output/spacy_unique_ingredients.txt"
 
 # Maximum number of concurrent API requests allowed at once (to avoid rate limits)
 CONCURRENCY = 35

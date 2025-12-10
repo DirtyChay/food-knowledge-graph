@@ -1,12 +1,12 @@
 # Spacy Processing for FoodKG Ingredients
 
-This folder contains a simple Spacy-based NLP processor for normalizing ingredient lists from the FoodKG recipe database.
+This folder contains Spacy-based NLP processing for normalizing ingredient lists from the FoodKG recipe table.
 
 ## Overview
 
 The `spacy_processor.py` script:
-1. Connects to the PostgreSQL database
-2. Fetches recipes from the FoodKG table
+1. Connects to PostgreSQL database
+2. Fetches recipes from FoodKG table
 3. Uses Spacy NLP to extract core ingredient names
 4. Saves the processed results to CSV
 
@@ -50,13 +50,6 @@ This will:
 - Process all recipes in the FoodKG table
 - Save results to `data/output/foodkg_spacy_processed.csv`
 
-### Test with limited data:
-
-Edit the `main()` function and change:
-```python
-df = fetch_foodkg_data(engine, limit=100)  # Process only 100 recipes
-```
-
 ## Output
 
 The script creates a CSV file with columns:
@@ -64,17 +57,3 @@ The script creates a CSV file with columns:
 - `title`: Recipe name
 - `ingredients`: Original ingredient list
 - `ingredients_normalized`: Processed ingredient list
-
-## Database Connection
-
-The script uses the same database credentials as `Neo4Jwriter.py`:
-- Host: awesome-hw.sdsc.edu
-- Database: nourish
-- User: b6hill
-
-## Notes
-
-- The processor is intentionally simple and rule-based
-- It focuses on extracting nouns as the core ingredient identifiers
-- More complex ingredient names (like "cream of mushroom soup") may be simplified to just the nouns
-- For more sophisticated processing, consider the LLM-based approach in `llm_util.py`

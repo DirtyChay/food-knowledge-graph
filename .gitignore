@@ -4,7 +4,11 @@
 .idea/inspectionProfiles/profiles_settings.xml
 .idea/food-knowledge-graph.iml
 .env
-data/raw
+# Ignore all files in the directory
+data/raw/*
+# But do NOT ignore the directory itself
+!data/raw/
+
 outputs
 data/SpacyProcessing
 SpacyProcessing/__pycache__/spacy_processor.cpython-313.pyc
@@ -14,4 +18,3 @@ single_run/results_async.csv
 llm_processing/batches/results_part_*
 llm_processing/batches/batch_results_all.csv
 llm_processing/finalize_products/mapped_responses.csv
-single_run/results_async.csv

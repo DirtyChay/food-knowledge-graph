@@ -334,8 +334,8 @@ if __name__ == "__main__":
     # Therefore, we remove these rows. If not using batches, you can skip this step.
 
     # Number of batches already processed (each batch contains 25,000 rows)
-    num_batches_run = 4  # 4 batches uploaded successfully = 100k rows
-    # Calculate how many rows to skip (4 batches * 25,000 rows per batch = 100,000 rows)
+    num_batches_run = 0  # ex. if 4 batches uploaded successfully, then set to 4
+    # Calculate how many rows to skip (ex. 4 batches * 25,000 rows per batch = 100,000 rows)
     start_offset = 25000 * num_batches_run
 
     # Define the path to the input CSV file

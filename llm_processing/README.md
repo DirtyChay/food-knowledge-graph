@@ -1,3 +1,15 @@
+### Prerequisites
+
+Before running these notebooks, ensure that the following CSV exists. It can be obtained from the Google Drive
+submission folder or by completing the spaCy steps.
+
+- data/output/foodkg_spacy_processed.csv
+
+Run `retrieve_food_kg.ipynb` and `retrieve_usda_branded_experimental.ipynb` to download the necessary CSVs.
+
+- data/raw/nourish_public_FoodKG.csv
+- data/raw/usda_2022_food_branded_experimental_DESCRIPTION_ONLY
+
 ### LLM Processing
 
 All prompts used by these notebooks and scripts are stored in the **prompts** folder.

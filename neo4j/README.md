@@ -6,7 +6,7 @@ Files included
 -Neo4Jwriter.py => End 2 end script to create the entire graph assuming cleaned ouput CSV files are already obtained from NEO4Jwriter.ipynb. Provided just for convenience. Same code can be executed in the notebook.
 -requirements.txt => required libs to install
 
-Other Required files (large files saved in persistant storage in NDP)
+Other Required files (large files saved in persistant storage in NDP and also google drive submission folder)
 -"foodkg_spacy_processed.csv" => output file from spacy preprocessing. If cleaned csv (see below) is already available, this is not required. Only needed if running from scratch.
 -"foodkg_spacy_processed_cleaned.csv" => generated in NEO4Jwriter.ipynb from "foodkg_spacy_processed.csv"
 -"mapped_responses.csv" => output file from llm preprocessing. If cleaned csv (see below) is already available, this is not required. Only needed if running from scratch.

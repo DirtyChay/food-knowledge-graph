@@ -21,4 +21,4 @@ run2
 single_run/results_async.csv
 llm_processing/batches/results_part_*
 llm_processing/batches/batch_results_all.csv
-llm_processing/finalize_products/mapped_responses.csv
+data/output/mapped_responses.csv

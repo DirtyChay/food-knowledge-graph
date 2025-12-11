@@ -60,3 +60,8 @@ The script creates a CSV file with columns:
 - `title`: Recipe name
 - `ingredients`: Original ingredient list
 - `ingredients_normalized`: Processed ingredient list
+
+## spaCy Output Analysis
+
+The `test_spacy.ipynb` notebook tests and benchmarks the output. To run it, simply run all the
+cells and make sure the spaCy output is in the data folder of this project.

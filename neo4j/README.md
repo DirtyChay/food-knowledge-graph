@@ -27,6 +27,6 @@ Instructions:
 - After connecting using above credentials run each of the Create idx statements in the GUI
 
 2) Make sure to install all the dependencies found in requirements.txt if running locally
-3) Copy required output files to same path as NEO4Jwriter.ipynb in NDP workspace
+3) Copy required output files to same path as NEO4Jwriter.ipynb ("brian_results_async_3.csv", "mapped_responses.csv", "foodkg_spacy_processed_cleaned.csv", "foodkg_spacy_processed.csv") These files are submitted to google drive folder - link: https://drive.google.com/drive/folders/1PjYl_mEVLIxk82QhK-Zt0PHOHFaXvZBc?usp=share_link 
 4) If cleaned csvs ( "foodkg_spacy_processed_cleaned.csv" and "brian_results_async_3.csv") are already available move to step 5. Otherwise, if running from scratch, scroll to the bottom of the notebook and run the code under sections "Process the Recipe Ingredients CSV" and "Process the products-ingredients mapping csv to rename cols and drop null vals" to generate the final cleaned csvs
 5) Run the cells from top to bottom to create the graph. Alternatively use the Neo4Jwriter.py script from the same location as the generated csvs mentioned in step 4.
